@@ -1556,7 +1556,7 @@ START_TEST(test_attributes)
     ElementInfo info[] = {
         { "doc", 3, "id", doc_info },
         { "tag", 1, NULL, tag_info },
-        { NULL, 0, NULL }
+        { NULL, 0, NULL, NULL }
     };
 
     XML_SetStartElementHandler(parser, counting_start_element_handler);
