@@ -1804,6 +1804,9 @@ START_TEST(test_explicit_encoding)
     /* Try to switch encodings mid-parse */
     if (XML_SetEncoding(parser, "us-ascii") != XML_STATUS_ERROR)
         fail("Allowed encoding change");
+    /* Check that parsing an empty string is accepted */
+    if (XML_Parse(parser, NULL, 0, XML_FALSE) == XML_STATUS_ERROR)
+        fail("Parsing empty string faulted");
     if (_XML_Parse_SINGLE_BYTES(parser, text2, strlen(text2),
                                 XML_TRUE) == XML_STATUS_ERROR)
         xml_failure(parser);
