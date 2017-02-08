@@ -2761,15 +2761,30 @@ START_TEST(test_ns_parser_reset)
 END_TEST
 
 /* Control variable; the number of times duff_allocator() will successfully allocate */
-static unsigned int allocation_count = 0;
+#define ALLOC_ALWAYS_SUCCEED (-1)
+#define REALLOC_ALWAYS_SUCCEED (-1)
+
+static int allocation_count = ALLOC_ALWAYS_SUCCEED;
+static int reallocation_count = REALLOC_ALWAYS_SUCCEED;
 
 /* Crocked allocator for allocation failure tests */
 static void *duff_allocator(size_t size)
 {
     if (allocation_count == 0)
         return NULL;
-    allocation_count--;
+    if (allocation_count != ALLOC_ALWAYS_SUCCEED)
+        allocation_count--;
     return malloc(size);
+}
+
+/* Crocked reallocator for allocation failure tests */
+static void *duff_reallocator(void *ptr, size_t size)
+{
+    if (reallocation_count == 0)
+        return NULL;
+    if (reallocation_count != REALLOC_ALWAYS_SUCCEED)
+        reallocation_count--;
+    return realloc(ptr, size);
 }
 
 /* Test that a failure to allocate the parser structure fails gracefully */
@@ -2827,7 +2842,7 @@ START_TEST(test_misc_alloc_ns)
     int repeated = 0;
     XML_Char ns_sep[2] = { ' ', '\0' };
 
-    allocation_count = 10000;
+    allocation_count = ALLOC_ALWAYS_SUCCEED;
     parser = XML_ParserCreate_MM(NULL, &memsuite, ns_sep);
     if (parser == NULL) {
         fail("Parser not created");
@@ -2866,7 +2881,7 @@ START_TEST(test_misc_alloc_ns_parse_buffer)
     void *buffer;
 
     /* Make sure the basic parser is allocated */
-    allocation_count = 10000;
+    allocation_count = ALLOC_ALWAYS_SUCCEED;
     parser = XML_ParserCreate_MM(NULL, &memsuite, ns_sep);
     if (parser == NULL)
         fail("Parser not created");
@@ -2880,7 +2895,7 @@ START_TEST(test_misc_alloc_ns_parse_buffer)
         fail("Pre-init XML_ParseBuffer faulted for wrong reason");
 
     /* Now with actual memory allocation */
-    allocation_count = 10000;
+    allocation_count = ALLOC_ALWAYS_SUCCEED;
     if (XML_ParseBuffer(parser, 0, XML_FALSE) != XML_STATUS_OK)
         xml_failure(parser);
 
@@ -2988,10 +3003,15 @@ END_TEST
 static void
 alloc_setup(void)
 {
-    XML_Memory_Handling_Suite memsuite = { duff_allocator, realloc, free };
+    XML_Memory_Handling_Suite memsuite = {
+        duff_allocator,
+        duff_reallocator,
+        free
+    };
 
     /* Ensure the parser creation will go through */
-    allocation_count = 10000;
+    allocation_count = ALLOC_ALWAYS_SUCCEED;
+    reallocation_count = REALLOC_ALWAYS_SUCCEED;
     parser = XML_ParserCreate_MM(NULL, &memsuite, NULL);
     if (parser == NULL)
         fail("Parser not created");
@@ -3030,7 +3050,7 @@ external_entity_duff_loader(XML_Parser parser,
         fail("Extern parser not created with allocation count 10");
 
     /* Make sure other random allocation doesn't now fail */
-    allocation_count = 10000;
+    allocation_count = ALLOC_ALWAYS_SUCCEED;
 
     /* Make sure the failure code path is executed too */
     return XML_STATUS_ERROR;
@@ -3147,7 +3167,7 @@ external_entity_dbl_handler(XML_Parser parser,
         }
     }
 
-    allocation_count = 10000;
+    allocation_count = ALLOC_ALWAYS_SUCCEED;
     if (_XML_Parse_SINGLE_BYTES(new_parser, text, strlen(text), XML_TRUE) == XML_STATUS_ERROR) {
         xml_failure(new_parser);
         return 0;
@@ -3212,7 +3232,7 @@ external_entity_dbl_handler_2(XML_Parser parser,
         }
 
         /* Ensure future allocations will be well */
-        allocation_count = 10000;
+        allocation_count = ALLOC_ALWAYS_SUCCEED;
         if (i == 0) {
             fail("first external parser unexpectedly created");
             XML_ParserFree(new_parser);
@@ -3226,7 +3246,7 @@ external_entity_dbl_handler_2(XML_Parser parser,
         /* Just run through once */
         text = ("<?xml version='1.0' encoding='us-ascii'?>"
                 "<e/>");
-        allocation_count = 10000;
+        allocation_count = ALLOC_ALWAYS_SUCCEED;
         new_parser = XML_ExternalEntityParserCreate(parser, context, NULL);
         if (new_parser == NULL) {
             fail("Unable to create second external parser");
