@@ -2295,13 +2295,28 @@ START_TEST(test_byte_info_at_end)
         XML_GetCurrentByteCount(parser) != 0)
         fail("Byte index/count incorrect at start of parse");
     if (_XML_Parse_SINGLE_BYTES(parser, text, strlen(text),
-                                XML_FALSE) == XML_STATUS_ERROR)
+                                XML_TRUE) == XML_STATUS_ERROR)
         xml_failure(parser);
     /* At end, the count will be zero and the index the end of string */
     if (XML_GetCurrentByteCount(parser) != 0)
         fail("Terminal byte count incorrect");
     if (XML_GetCurrentByteIndex(parser) != (XML_Index)strlen(text))
         fail("Terminal byte index incorrect");
+}
+END_TEST
+
+/* Test position information from errors */
+START_TEST(test_byte_info_at_error)
+{
+    const char *text = "<doc></wombat></doc>";
+
+    if (_XML_Parse_SINGLE_BYTES(parser, text, strlen(text),
+                                XML_TRUE) == XML_STATUS_OK)
+        fail("Syntax error not faulted");
+    if (XML_GetCurrentByteCount(parser) != 0)
+        fail("Error byte count incorrect");
+    if (XML_GetCurrentByteIndex(parser) != 7)
+        fail("Error byte index incorrect");
 }
 END_TEST
 
@@ -3406,6 +3421,7 @@ make_suite(void)
     tcase_add_test(tc_basic, test_get_buffer_1);
     tcase_add_test(tc_basic, test_get_buffer_2);
     tcase_add_test(tc_basic, test_byte_info_at_end);
+    tcase_add_test(tc_basic, test_byte_info_at_error);
 
     suite_add_tcase(s, tc_namespace);
     tcase_add_checked_fixture(tc_namespace,
