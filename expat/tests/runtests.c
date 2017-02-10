@@ -3800,6 +3800,60 @@ START_TEST(test_alloc_realloc_buffer)
 }
 END_TEST
 
+/* Same test for external entity parsers */
+static int XMLCALL
+external_entity_reallocator(XML_Parser parser,
+                            const XML_Char *context,
+                            const XML_Char *UNUSED_P(base),
+                            const XML_Char *UNUSED_P(systemId),
+                            const XML_Char *UNUSED_P(publicId))
+{
+    const char *text = get_buffer_test_text;
+    XML_Parser ext_parser;
+    void *buffer;
+    enum XML_Status status;
+
+    ext_parser = XML_ExternalEntityParserCreate(parser, context, NULL);
+    if (ext_parser == NULL)
+        fail("Could not create external entity parser");
+
+    reallocation_count = (intptr_t)XML_GetUserData(parser);
+    buffer = XML_GetBuffer(ext_parser, 1536);
+    if (buffer == NULL)
+        fail("Buffer allocation failed");
+    memcpy(buffer, text, strlen(text));
+    status = XML_ParseBuffer(ext_parser, strlen(text), XML_FALSE);
+    reallocation_count = -1;
+    XML_ParserFree(ext_parser);
+    return (status == XML_STATUS_OK) ? 1 : 0;
+}
+
+START_TEST(test_alloc_ext_entity_realloc_buffer)
+{
+    const char *text =
+        "<!DOCTYPE doc [\n"
+        "  <!ENTITY en SYSTEM 'http://xml.libexpat.org/dummy.ent'>\n"
+        "]>\n"
+        "<doc>&en;</doc>";
+    int i;
+
+    for (i = 0; i < 10; i++) {
+        XML_SetExternalEntityRefHandler(parser,
+                                        external_entity_reallocator);
+        XML_SetUserData(parser, (void *)(intptr_t)i);
+        if (_XML_Parse_SINGLE_BYTES(parser, text, strlen(text),
+                                    XML_TRUE) == XML_STATUS_OK)
+            break;
+        XML_ParserReset(parser, NULL);
+    }
+    if (i == 0)
+        fail("Succeeded with no reallocations");
+    if (i == 10)
+        fail("Failed with 10 reallocations");
+}
+END_TEST
+
+
 static Suite *
 make_suite(void)
 {
@@ -3927,6 +3981,7 @@ make_suite(void)
     tcase_add_test(tc_alloc, test_alloc_explicit_encoding);
     tcase_add_test(tc_alloc, test_alloc_set_base);
     tcase_add_test(tc_alloc, test_alloc_realloc_buffer);
+    tcase_add_test(tc_alloc, test_alloc_ext_entity_realloc_buffer);
 
     return s;
 }
