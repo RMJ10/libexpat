@@ -1305,6 +1305,11 @@ START_TEST(test_ext_entity_invalid_parse)
             "Incomplete character not faulted",
             XML_ERROR_PARTIAL_CHAR
         },
+        {
+            "<tag>\xe2\x82",
+            "Incomplete character in CDATA not faulted",
+            XML_ERROR_PARTIAL_CHAR
+        },
         { NULL, NULL, XML_ERROR_NONE }
     };
     ExtFaults *fault;
