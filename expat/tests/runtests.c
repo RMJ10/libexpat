@@ -1739,7 +1739,7 @@ record_skip_handler(void *userData,
 /* Test XML_DefaultCurrent() passes handling on correctly */
 START_TEST(test_default_current)
 {
-    const char *text = "<doc>hello</doc>";
+    const char *text = "<doc>hell]</doc>";
     const char *entity_text =
         "<!DOCTYPE doc [\n"
         "<!ENTITY entity '&#37;'>\n"
