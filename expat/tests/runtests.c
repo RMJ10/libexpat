@@ -4353,6 +4353,49 @@ START_TEST(test_alloc_ext_entity_realloc_buffer)
 }
 END_TEST
 
+/* Test elements with many attributes are handled correctly */
+START_TEST(test_alloc_realloc_many_attributes)
+{
+    const char *text =
+        "<!DOCTYPE doc [\n"
+        "<!ATTLIST doc za CDATA 'default'>\n"
+        "<!ATTLIST doc zb CDATA 'def2'>\n"
+        "<!ATTLIST doc zc CDATA 'def3'>\n"
+        "]>\n"
+        "<doc a='1'"
+        "     b='2'"
+        "     c='3'"
+        "     d='4'"
+        "     e='5'"
+        "     f='6'"
+        "     g='7'"
+        "     h='8'"
+        "     i='9'"
+        "     j='10'"
+        "     k='11'"
+        "     l='12'"
+        "     m='13'"
+        "     n='14'"
+        "     p='15'>"
+        "</doc>";
+    int i;
+#define MAX_REALLOC_COUNT 10
+
+    for (i = 0; i < MAX_REALLOC_COUNT; i++) {
+        reallocation_count = i;
+        if (_XML_Parse_SINGLE_BYTES(parser, text, strlen(text),
+                                    XML_TRUE) != XML_STATUS_ERROR)
+            break;
+        XML_ParserReset(parser, NULL);
+    }
+    if (i == 0)
+        fail("Parse succeeded despite no reallocations");
+    if (i == MAX_REALLOC_COUNT)
+        fail("Parse failed at max reallocations");
+#undef MAX_REALLOC_COUNT
+}
+END_TEST
+
 
 static void
 nsalloc_setup(void)
@@ -4711,6 +4754,7 @@ make_suite(void)
     tcase_add_test(tc_alloc, test_alloc_set_base);
     tcase_add_test(tc_alloc, test_alloc_realloc_buffer);
     tcase_add_test(tc_alloc, test_alloc_ext_entity_realloc_buffer);
+    tcase_add_test(tc_alloc, test_alloc_realloc_many_attributes);
 
     suite_add_tcase(s, tc_nsalloc);
     tcase_add_checked_fixture(tc_nsalloc, nsalloc_setup, nsalloc_teardown);
