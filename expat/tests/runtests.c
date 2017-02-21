@@ -2024,10 +2024,16 @@ START_TEST(test_attributes)
         { NULL, NULL }
     };
     ElementInfo info[] = {
-        { "doc", 3, "id", doc_info },
-        { "tag", 1, NULL, tag_info },
+        { "doc", 3, "id", NULL },
+        { "tag", 1, NULL, NULL },
         { NULL, 0, NULL, NULL }
     };
+
+    /* Silence some warnings: doc_info and tag_info are not computable
+     * at load time, making the variable initialisation harder.
+     */
+    info[0].attributes = doc_info;
+    info[1].attributes = tag_info;
 
     XML_SetStartElementHandler(parser, counting_start_element_handler);
     XML_SetUserData(parser, info);
