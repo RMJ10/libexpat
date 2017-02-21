@@ -5891,8 +5891,9 @@ dtdCopy(XML_Parser oldParser, DTD *newDtd, const DTD *oldDtd, const XML_Memory_H
     if (oldE->nDefaultAtts) {
       newE->defaultAtts = (DEFAULT_ATTRIBUTE *)
           ms->malloc_fcn(oldE->nDefaultAtts * sizeof(DEFAULT_ATTRIBUTE));
-      if (!newE->defaultAtts)
+      if (!newE->defaultAtts) {
         return 0;
+      }
     }
     if (oldE->idAtt)
       newE->idAtt = (ATTRIBUTE_ID *)
