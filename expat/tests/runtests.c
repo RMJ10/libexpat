@@ -1804,9 +1804,6 @@ START_TEST(test_explicit_encoding)
     /* Try to switch encodings mid-parse */
     if (XML_SetEncoding(parser, "us-ascii") != XML_STATUS_ERROR)
         fail("Allowed encoding change");
-    /* Check that parsing an empty string is accepted */
-    if (XML_Parse(parser, NULL, 0, XML_FALSE) == XML_STATUS_ERROR)
-        fail("Parsing empty string faulted");
     if (_XML_Parse_SINGLE_BYTES(parser, text2, strlen(text2),
                                 XML_TRUE) == XML_STATUS_ERROR)
         xml_failure(parser);
@@ -1975,6 +1972,17 @@ START_TEST(test_ext_entity_ref_parameter)
 }
 END_TEST
 
+/* Test the parsing of an empty string */
+START_TEST(test_empty_parse)
+{
+    if (XML_Parse(parser, NULL, 0, XML_FALSE) == XML_STATUS_ERROR)
+        fail("Parsing empty string faulted");
+    if (XML_Parse(parser, NULL, 0, XML_TRUE) != XML_STATUS_ERROR)
+        fail("Parsing final empty string not faulted");
+    if (XML_GetErrorCode(parser) != XML_ERROR_NO_ELEMENTS)
+        fail("Parsing final empty string faulted for wrong reason");
+}
+END_TEST
 
 /*
  * Namespaces tests.
@@ -3003,6 +3011,7 @@ make_suite(void)
     tcase_add_test(tc_basic, test_explicit_encoding);
     tcase_add_test(tc_basic, test_user_parameters);
     tcase_add_test(tc_basic, test_ext_entity_ref_parameter);
+    tcase_add_test(tc_basic, test_empty_parse);
 
     suite_add_tcase(s, tc_namespace);
     tcase_add_checked_fixture(tc_namespace,
