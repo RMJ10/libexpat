@@ -2021,7 +2021,7 @@ get_feature(enum XML_FeatureEnum feature_id, long *presult)
     return XML_STATUS_ERROR;
 }
 
-START_TEST(test_get_buffer)
+START_TEST(test_get_buffer_1)
 {
     /* Having an element name longer than 1024 characters exercises
      * some of the pool allocation code in the parser that otherwise
@@ -2087,6 +2087,50 @@ START_TEST(test_get_buffer)
     /* Now try extending it a carefully crafted amount */
     if (XML_GetBuffer(parser, 1000) == NULL)
         fail("1000 buffer failed");
+}
+END_TEST
+
+
+/* Test more corners of the XML_GetBuffer interface */
+START_TEST(test_get_buffer_2)
+{
+    /* See comment in test_get_buffer_1() */
+    const char *text =
+        "<documentwitharidiculouslylongelementnametotease" /* 0x02f */
+        "aparticularcorneroftheallocationinXML_GetBuffers" /* 0x05f */
+        "othatwecanimprovethecoverageyetagain012345678901" /* 0x08f */
+        "123456789abcdef0123456789abcdef0123456789abcdef0" /* 0x0bf */
+        "123456789abcdef0123456789abcdef0123456789abcdef0" /* 0x0ef */
+        "123456789abcdef0123456789abcdef0123456789abcdef0" /* 0x11f */
+        "123456789abcdef0123456789abcdef0123456789abcdef0" /* 0x1f4 */
+        "123456789abcdef0123456789abcdef0123456789abcdef0" /* 0x17f */
+        "123456789abcdef0123456789abcdef0123456789abcdef0" /* 0x1af */
+        "123456789abcdef0123456789abcdef0123456789abcdef0" /* 0x1df */
+        "123456789abcdef0123456789abcdef0123456789abcdef0" /* 0x20f */
+        "123456789abcdef0123456789abcdef0123456789abcdef0" /* 0x23f */
+        "123456789abcdef0123456789abcdef0123456789abcdef0" /* 0x26f */
+        "123456789abcdef0123456789abcdef0123456789abcdef0" /* 0x29f */
+        "123456789abcdef0123456789abcdef0123456789abcdef0" /* 0x2cf */
+        "123456789abcdef0123456789abcdef0123456789abcdef0" /* 0x2ff */
+        "123456789abcdef0123456789abcdef0123456789abcdef0" /* 0x32f */
+        "123456789abcdef0123456789abcdef0123456789abcdef0" /* 0x35f */
+        "123456789abcdef0123456789abcdef0123456789abcdef0" /* 0x38f */
+        "123456789abcdef0123456789abcdef0123456789abcdef0" /* 0x3bf */
+        "123456789abcdef0123456789abcdef0123456789abcdef0" /* 0x3ef */
+        "123456789abcdef0123456789abcdef0123456789>\n<ef0"; /* 0x418 */
+    void *buffer;
+
+    /* Now get a decent buffer */
+    buffer = XML_GetBuffer(parser, 1536);
+    if (buffer == NULL)
+        fail("1.5K buffer failed");
+    memcpy(buffer, text, strlen(text));
+    if (XML_ParseBuffer(parser, strlen(text), XML_FALSE) == XML_STATUS_ERROR)
+        xml_failure(parser);
+
+    /* Extend it, to catch a different code path */
+    if (XML_GetBuffer(parser, 1024) == NULL)
+        fail("1024 buffer failed");
 }
 END_TEST
 
@@ -3178,7 +3222,8 @@ make_suite(void)
     tcase_add_test(tc_basic, test_user_parameters);
     tcase_add_test(tc_basic, test_ext_entity_ref_parameter);
     tcase_add_test(tc_basic, test_empty_parse);
-    tcase_add_test(tc_basic, test_get_buffer);
+    tcase_add_test(tc_basic, test_get_buffer_1);
+    tcase_add_test(tc_basic, test_get_buffer_2);
 
     suite_add_tcase(s, tc_namespace);
     tcase_add_checked_fixture(tc_namespace,
