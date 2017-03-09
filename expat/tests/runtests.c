@@ -1091,6 +1091,7 @@ static void dummy_release(void *UNUSED_P(data))
 {
 }
 
+/* Regression test for SF bug #620106. */
 static int XMLCALL
 UnrecognisedEncodingHandler(void *UNUSED_P(data),
                             const XML_Char *UNUSED_P(encoding),
