@@ -6102,6 +6102,8 @@ START_TEST(test_alloc_notation)
             repeat++;
         }
         allocation_count = i;
+        dummy_handler_flags = 0;
+        XML_SetEntityDeclHandler(parser, dummy_entity_decl_handler);
         if (_XML_Parse_SINGLE_BYTES(parser, text, strlen(text),
                                     XML_TRUE) != XML_STATUS_ERROR)
             break;
@@ -6111,6 +6113,8 @@ START_TEST(test_alloc_notation)
         fail("Parse succeeded despite allocation failures");
     if (i == MAX_ALLOC_COUNT)
         fail("Parse failed at maximum allocation count");
+    if (dummy_handler_flags != DUMMY_ENTITY_DECL_HANDLER_FLAG)
+        fail("Entity declaration handler not called");
 }
 #undef MAX_ALLOC_COUNT
 END_TEST
