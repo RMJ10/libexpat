@@ -4422,6 +4422,15 @@ START_TEST(test_abort_epilog)
 }
 END_TEST
 
+START_TEST(test_unfinished_epilog)
+{
+    const char *text = "<doc></doc><";
+
+    expect_failure(text, XML_ERROR_UNCLOSED_TOKEN,
+                   "Incomplete epilog entry not faulted");
+}
+END_TEST
+
 
 /*
  * Namespaces tests.
@@ -7662,6 +7671,7 @@ make_suite(void)
     tcase_add_test(tc_basic, test_undefined_ext_entity_in_external_dtd);
     tcase_add_test(tc_basic, test_suspend_xdecl);
     tcase_add_test(tc_basic, test_abort_epilog);
+    tcase_add_test(tc_basic, test_unfinished_epilog);
 
     suite_add_tcase(s, tc_namespace);
     tcase_add_checked_fixture(tc_namespace,
