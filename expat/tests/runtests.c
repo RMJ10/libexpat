@@ -187,9 +187,11 @@ dummy_notation_decl_handler(void *UNUSED_P(userData),
 static void XMLCALL
 dummy_element_decl_handler(void *UNUSED_P(userData),
                            const XML_Char *UNUSED_P(name),
-                           XML_Content *UNUSED_P(model))
+                           XML_Content *model)
 {
     dummy_handler_flags |= DUMMY_ELEMENT_DECL_HANDLER_FLAG;
+    /* It is the handler's job to free the content model */
+    XML_FreeContentModel(parser, model);
 }
 
 static void XMLCALL
