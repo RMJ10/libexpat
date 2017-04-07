@@ -4637,6 +4637,16 @@ START_TEST(test_reject_unfinished_param_in_att_value)
 }
 END_TEST
 
+START_TEST(test_trailing_cr_in_att_value)
+{
+    const char *text = "<doc a='value\r'/>";
+
+    if (_XML_Parse_SINGLE_BYTES(parser, text, strlen(text),
+                                XML_TRUE) == XML_STATUS_ERROR)
+        xml_failure(parser);
+}
+END_TEST
+
 
 /*
  * Namespaces tests.
@@ -8035,6 +8045,7 @@ make_suite(void)
     tcase_add_test(tc_basic, test_restart_on_error);
     tcase_add_test(tc_basic, test_reject_lt_in_attribute_value);
     tcase_add_test(tc_basic, test_reject_unfinished_param_in_att_value);
+    tcase_add_test(tc_basic, test_trailing_cr_in_att_value);
 
     suite_add_tcase(s, tc_namespace);
     tcase_add_checked_fixture(tc_namespace,
