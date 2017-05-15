@@ -6501,8 +6501,15 @@ poolGrow(STRING_POOL *pool)
     BLOCK *temp;
     int blockSize = (int)((unsigned)(pool->end - pool->start)*2U);
 
-    if (blockSize < 0)
-      return XML_FALSE;
+    if (blockSize < 0) {
+      /* This condition traps a situation where either more than
+       * INT_MAX/2 bytes have already been allocated.  This isn't
+       * readily testable, since it is unlikely that an average
+       * machine will have that much memory, so we exclude it from the
+       * coverage statistics.
+       */
+      return XML_FALSE; /* LCOV_EXCL_LINE */
+    }
 
     temp = (BLOCK *)
       pool->mem->realloc_fcn(pool->blocks,
