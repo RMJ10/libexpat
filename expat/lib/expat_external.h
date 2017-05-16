@@ -93,7 +93,9 @@ extern "C" {
 #endif
 
 #ifdef XML_UNICODE_WCHAR_T
+#ifndef XML_UNICODE
 #define XML_UNICODE
+#endif
 #endif
 
 #ifdef XML_UNICODE     /* Information is UTF-16 encoded. */
