@@ -2719,18 +2719,18 @@ START_TEST(test_attributes)
         "<tag c='3'/>"
         "</doc>";
     AttrInfo doc_info[] = {
-        { "a",  "1" },
-        { "b",  "2" },
-        { "id", "one" },
+        { XML_CHAR_CONST("a"),  XML_CHAR_CONST("1") },
+        { XML_CHAR_CONST("b"),  XML_CHAR_CONST("2") },
+        { XML_CHAR_CONST("id"), XML_CHAR_CONST("one") },
         { NULL, NULL }
     };
     AttrInfo tag_info[] = {
-        { "c",  "3" },
+        { XML_CHAR_CONST("c"),  XML_CHAR_CONST("3") },
         { NULL, NULL }
     };
     ElementInfo info[] = {
-        { "doc", 3, "id", NULL },
-        { "tag", 1, NULL, NULL },
+        { XML_CHAR_CONST("doc"), 3, XML_CHAR_CONST("id"), NULL },
+        { XML_CHAR_CONST("tag"), 1, NULL, NULL },
         { NULL, 0, NULL, NULL }
     };
 
