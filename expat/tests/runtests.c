@@ -4203,7 +4203,7 @@ START_TEST(test_attribute_enum_value)
     /* An attribute list handler provokes a different code path */
     XML_SetAttlistDeclHandler(parser, dummy_attlist_decl_handler);
     run_ext_character_check(text, &dtd_data,
-                            "This is a \n      \n\nyellow tiger");
+                            XML_CHAR_CONST("This is a \n      \n\nyellow tiger"));
 }
 END_TEST
 
