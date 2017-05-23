@@ -1925,7 +1925,8 @@ END_TEST
 START_TEST(test_good_cdata_ascii)
 {
     const char *text = "<a><![CDATA[<greeting>Hello, world!</greeting>]]></a>";
-    const char *expected = "<greeting>Hello, world!</greeting>";
+    const XML_Char *expected =
+        XML_CHAR_CONST("<greeting>Hello, world!</greeting>");
 
     CharData storage;
     CharData_Init(&storage);
