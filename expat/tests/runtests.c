@@ -1698,9 +1698,9 @@ START_TEST(test_dtd_attr_handling)
             "<!ATTLIST doc a ( one | two | three ) #REQUIRED>\n"
             "]>"
             "<doc a='two'/>",
-            "doc",
-            "a",
-            "(one|two|three)", /* Extraneous spaces will be removed */
+            XML_CHAR_CONST("doc"),
+            XML_CHAR_CONST("a"),
+            XML_CHAR_CONST("(one|two|three)"), /* Extraneous spaces will be removed */
             NULL,
             XML_TRUE
         },
@@ -1709,9 +1709,9 @@ START_TEST(test_dtd_attr_handling)
             "<!ATTLIST doc a NOTATION (foo) #IMPLIED>\n"
             "]>"
             "<doc/>",
-            "doc",
-            "a",
-            "NOTATION(foo)",
+            XML_CHAR_CONST("doc"),
+            XML_CHAR_CONST("a"),
+            XML_CHAR_CONST("NOTATION(foo)"),
             NULL,
             XML_FALSE
         },
@@ -1719,10 +1719,10 @@ START_TEST(test_dtd_attr_handling)
             "<!ATTLIST doc a NOTATION (foo) 'bar'>\n"
             "]>"
             "<doc/>",
-            "doc",
-            "a",
-            "NOTATION(foo)",
-            "bar",
+            XML_CHAR_CONST("doc"),
+            XML_CHAR_CONST("a"),
+            XML_CHAR_CONST("NOTATION(foo)"),
+            XML_CHAR_CONST("bar"),
             XML_FALSE
         },
         { NULL, NULL, NULL, NULL, NULL, XML_FALSE }
