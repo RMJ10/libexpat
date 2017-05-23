@@ -5016,13 +5016,13 @@ static void XMLCALL
 triplet_start_checker(void *userData, const XML_Char *name,
                       const XML_Char **atts)
 {
-    char **elemstr = (char **)userData;
+    XML_Char **elemstr = (XML_Char **)userData;
     char buffer[1024];
-    if (strcmp(elemstr[0], name) != 0) {
+    if (XML_CHAR_strcmp(elemstr[0], name) != 0) {
         sprintf(buffer, "unexpected start string: '%" XML_FMT_STR "'", name);
         fail(buffer);
     }
-    if (strcmp(elemstr[1], atts[0]) != 0) {
+    if (XML_CHAR_strcmp(elemstr[1], atts[0]) != 0) {
         sprintf(buffer, "unexpected attribute string: '%" XML_FMT_STR "'",
                 atts[0]);
         fail(buffer);
@@ -5037,8 +5037,8 @@ triplet_start_checker(void *userData, const XML_Char *name,
 static void XMLCALL
 triplet_end_checker(void *userData, const XML_Char *name)
 {
-    char **elemstr = (char **)userData;
-    if (strcmp(elemstr[0], name) != 0) {
+    XML_Char **elemstr = (XML_Char **)userData;
+    if (XML_CHAR_strcmp(elemstr[0], name) != 0) {
         char buffer[1024];
         sprintf(buffer, "unexpected end string: '%" XML_FMT_STR "'", name);
         fail(buffer);
@@ -5052,9 +5052,9 @@ START_TEST(test_return_ns_triplet)
         "<foo:e xmlns:foo='http://example.org/' bar:a='12'\n"
         "       xmlns:bar='http://example.org/'>";
     const char *epilog = "</foo:e>";
-    const char *elemstr[] = {
-        "http://example.org/ e foo",
-        "http://example.org/ a bar"
+    const XML_Char *elemstr[] = {
+        XML_CHAR_CONST("http://example.org/ e foo"),
+        XML_CHAR_CONST("http://example.org/ a bar")
     };
     XML_SetReturnNSTriplet(parser, XML_TRUE);
     XML_SetUserData(parser, elemstr);
@@ -5308,8 +5308,8 @@ START_TEST(test_ns_prefix_with_empty_uri_4)
     /* Packaged info expected by the end element handler;
        the weird structuring lets us re-use the triplet_end_checker()
        function also used for another test. */
-    const char *elemstr[] = {
-        "http://example.org/ doc prefix"
+    const XML_Char *elemstr[] = {
+        XML_CHAR_CONST("http://example.org/ doc prefix")
     };
     XML_SetReturnNSTriplet(parser, XML_TRUE);
     XML_SetUserData(parser, elemstr);
@@ -5444,10 +5444,10 @@ START_TEST(test_ns_long_element)
         " xmlns:foo='http://example.org/' bar:a='12'\n"
         " xmlns:bar='http://example.org/'>"
         "</foo:thisisalongenoughelementnametotriggerareallocation>";
-    const char *elemstr[] = {
-        "http://example.org/"
-        " thisisalongenoughelementnametotriggerareallocation foo",
-        "http://example.org/ a bar"
+    const XML_Char *elemstr[] = {
+        XML_CHAR_CONST("http://example.org/")
+        XML_CHAR_CONST(" thisisalongenoughelementnametotriggerareallocation foo"),
+        XML_CHAR_CONST("http://example.org/ a bar")
     };
 
     XML_SetReturnNSTriplet(parser, XML_TRUE);
@@ -8785,25 +8785,25 @@ START_TEST(test_nsalloc_long_attr_prefix)
         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789AZ"
         "='http://example.org/'>"
         "</foo:e>";
-    const char *elemstr[] = {
-        "http://example.org/ e foo",
-        "http://example.org/ a "
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789AZ"
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789AZ"
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789AZ"
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789AZ"
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789AZ"
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789AZ"
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789AZ"
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789AZ"
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789AZ"
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789AZ"
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789AZ"
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789AZ"
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789AZ"
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789AZ"
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789AZ"
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789AZ"
+    const XML_Char *elemstr[] = {
+        XML_CHAR_CONST("http://example.org/ e foo"),
+        XML_CHAR_CONST("http://example.org/ a ")
+        XML_CHAR_CONST("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789AZ")
+        XML_CHAR_CONST("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789AZ")
+        XML_CHAR_CONST("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789AZ")
+        XML_CHAR_CONST("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789AZ")
+        XML_CHAR_CONST("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789AZ")
+        XML_CHAR_CONST("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789AZ")
+        XML_CHAR_CONST("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789AZ")
+        XML_CHAR_CONST("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789AZ")
+        XML_CHAR_CONST("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789AZ")
+        XML_CHAR_CONST("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789AZ")
+        XML_CHAR_CONST("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789AZ")
+        XML_CHAR_CONST("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789AZ")
+        XML_CHAR_CONST("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789AZ")
+        XML_CHAR_CONST("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789AZ")
+        XML_CHAR_CONST("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789AZ")
+        XML_CHAR_CONST("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789AZ")
     };
     int i;
 #define MAX_ALLOC_COUNT 15
@@ -8881,10 +8881,10 @@ START_TEST(test_nsalloc_long_element)
         " xmlns:foo='http://example.org/' bar:a='12'\n"
         " xmlns:bar='http://example.org/'>"
         "</foo:thisisalongenoughelementnametotriggerareallocation>";
-    const char *elemstr[] = {
-        "http://example.org/"
-        " thisisalongenoughelementnametotriggerareallocation foo",
-        "http://example.org/ a bar"
+    const XML_Char *elemstr[] = {
+        XML_CHAR_CONST("http://example.org/")
+        XML_CHAR_CONST(" thisisalongenoughelementnametotriggerareallocation foo"),
+        XML_CHAR_CONST("http://example.org/ a bar")
     };
     int i;
 #define MAX_ALLOC_COUNT 15
