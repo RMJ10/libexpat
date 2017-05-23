@@ -40,14 +40,18 @@
 #include <wchar.h>
 #define XML_FMT_CHAR "lc"
 #define XML_FMT_STR "ls"
+#define XML_CHAR_strlen(s) wcslen(s)
 #define XML_CHAR_strcmp(s, t) wcscmp((s), (t))
+#define XML_CHAR_strncmp(s, t, n) wcsncmp((s), (t), (n))
 #else
 #ifdef XML_UNICODE
 #error "No support for UTF-16 without wchar_t in tests"
 #else
 #define XML_FMT_CHAR "c"
 #define XML_FMT_STR "s"
+#define XML_CHAR_strlen(s) strlen(s)
 #define XML_CHAR_strcmp(s, t) strcmp((s), (t))
+#define XML_CHAR_strncmp(s, t, n) strncmp((s), (t), (n))
 #endif
 #endif
 
