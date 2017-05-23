@@ -4518,11 +4518,11 @@ selective_aborting_default_handler(void *userData,
                                    const XML_Char *s,
                                    int len)
 {
-    const char *match = (const char *)userData;
+    const XML_Char *match = (const XML_Char *)userData;
 
     if (match == NULL ||
-        (strlen(match) == (unsigned)len &&
-         !strncmp(match, s, len))) {
+        (XML_CHAR_strlen(match) == (unsigned)len &&
+         !XML_CHAR_strncmp(match, s, len))) {
         XML_StopParser(parser, resumable);
         XML_SetDefaultHandler(parser, NULL);
     }
@@ -4531,7 +4531,7 @@ selective_aborting_default_handler(void *userData,
 START_TEST(test_abort_epilog)
 {
     const char *text = "<doc></doc>\n\r\n";
-    char match[] = "\r";
+    XML_Char match[] = XML_CHAR_CONST("\r");
 
     XML_SetDefaultHandler(parser, selective_aborting_default_handler);
     XML_SetUserData(parser, match);
@@ -4548,7 +4548,7 @@ END_TEST
 START_TEST(test_abort_epilog_2)
 {
     const char *text = "<doc></doc>\n";
-    char match[] = "\n";
+    XML_Char match[] = XML_CHAR_CONST("\n");
 
     XML_SetDefaultHandler(parser, selective_aborting_default_handler);
     XML_SetUserData(parser, match);
@@ -4561,7 +4561,7 @@ END_TEST
 START_TEST(test_suspend_epilog)
 {
     const char *text = "<doc></doc>\n";
-    char match[] = "\n";
+    XML_Char match[] = XML_CHAR_CONST("\n");
 
     XML_SetDefaultHandler(parser, selective_aborting_default_handler);
     XML_SetUserData(parser, match);
