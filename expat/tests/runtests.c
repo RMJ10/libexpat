@@ -1092,25 +1092,25 @@ is_whitespace_normalized(const XML_Char *s, int is_cdata)
 static void
 testhelper_is_whitespace_normalized(void)
 {
-    assert(is_whitespace_normalized("abc", 0));
-    assert(is_whitespace_normalized("abc", 1));
-    assert(is_whitespace_normalized("abc def ghi", 0));
-    assert(is_whitespace_normalized("abc def ghi", 1));
-    assert(!is_whitespace_normalized(" abc def ghi", 0));
-    assert(is_whitespace_normalized(" abc def ghi", 1));
-    assert(!is_whitespace_normalized("abc  def ghi", 0));
-    assert(is_whitespace_normalized("abc  def ghi", 1));
-    assert(!is_whitespace_normalized("abc def ghi ", 0));
-    assert(is_whitespace_normalized("abc def ghi ", 1));
-    assert(!is_whitespace_normalized(" ", 0));
-    assert(is_whitespace_normalized(" ", 1));
-    assert(!is_whitespace_normalized("\t", 0));
-    assert(!is_whitespace_normalized("\t", 1));
-    assert(!is_whitespace_normalized("\n", 0));
-    assert(!is_whitespace_normalized("\n", 1));
-    assert(!is_whitespace_normalized("\r", 0));
-    assert(!is_whitespace_normalized("\r", 1));
-    assert(!is_whitespace_normalized("abc\t def", 1));
+    assert(is_whitespace_normalized(XML_CHAR_CONST("abc"), 0));
+    assert(is_whitespace_normalized(XML_CHAR_CONST("abc"), 1));
+    assert(is_whitespace_normalized(XML_CHAR_CONST("abc def ghi"), 0));
+    assert(is_whitespace_normalized(XML_CHAR_CONST("abc def ghi"), 1));
+    assert(!is_whitespace_normalized(XML_CHAR_CONST(" abc def ghi"), 0));
+    assert(is_whitespace_normalized(XML_CHAR_CONST(" abc def ghi"), 1));
+    assert(!is_whitespace_normalized(XML_CHAR_CONST("abc  def ghi"), 0));
+    assert(is_whitespace_normalized(XML_CHAR_CONST("abc  def ghi"), 1));
+    assert(!is_whitespace_normalized(XML_CHAR_CONST("abc def ghi "), 0));
+    assert(is_whitespace_normalized(XML_CHAR_CONST("abc def ghi "), 1));
+    assert(!is_whitespace_normalized(XML_CHAR_CONST(" "), 0));
+    assert(is_whitespace_normalized(XML_CHAR_CONST(" "), 1));
+    assert(!is_whitespace_normalized(XML_CHAR_CONST("\t"), 0));
+    assert(!is_whitespace_normalized(XML_CHAR_CONST("\t"), 1));
+    assert(!is_whitespace_normalized(XML_CHAR_CONST("\n"), 0));
+    assert(!is_whitespace_normalized(XML_CHAR_CONST("\n"), 1));
+    assert(!is_whitespace_normalized(XML_CHAR_CONST("\r"), 0));
+    assert(!is_whitespace_normalized(XML_CHAR_CONST("\r"), 1));
+    assert(!is_whitespace_normalized(XML_CHAR_CONST("abc\t def"), 1));
 }
 
 static void XMLCALL
