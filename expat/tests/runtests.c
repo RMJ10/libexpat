@@ -1276,12 +1276,12 @@ START_TEST(test_ext_entity_set_encoding)
            UTF-8, which we tell Expat using XML_SetEncoding().
         */
         "<?xml encoding='iso-8859-3'?>\xC3\xA9",
-        "utf-8",
+        XML_CHAR_CONST("utf-8"),
         NULL
     };
 
     XML_SetExternalEntityRefHandler(parser, external_entity_loader);
-    run_ext_character_check(text, &test_data, "\xC3\xA9");
+    run_ext_character_check(text, &test_data, XML_CHAR_CONST("\xC3\xA9"));
 }
 END_TEST
 
