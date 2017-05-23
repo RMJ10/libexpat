@@ -1367,7 +1367,7 @@ START_TEST(test_ext_entity_bad_encoding)
     ExtFaults fault = {
         "<?xml encoding='iso-8859-3'?>u",
         "Unsupported encoding not faulted",
-        "unknown",
+        XML_CHAR_CONST("unknown"),
         XML_ERROR_UNKNOWN_ENCODING
     };
 
