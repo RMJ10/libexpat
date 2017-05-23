@@ -475,7 +475,7 @@ accumulate_attribute(void *userData, const XML_Char *UNUSED_P(name),
 
 
 static void
-_run_character_check(const XML_Char *text, const XML_Char *expected,
+_run_character_check(const char *text, const XML_Char *expected,
                      const char *file, int line)
 {
     CharData storage;
@@ -492,7 +492,7 @@ _run_character_check(const XML_Char *text, const XML_Char *expected,
         _run_character_check(text, expected, __FILE__, __LINE__)
 
 static void
-_run_attribute_check(const XML_Char *text, const XML_Char *expected,
+_run_attribute_check(const char *text, const XML_Char *expected,
                      const char *file, int line)
 {
     CharData storage;
@@ -522,7 +522,7 @@ ext_accumulate_characters(void *userData, const XML_Char *s, int len)
 }
 
 static void
-_run_ext_character_check(const XML_Char *text,
+_run_ext_character_check(const char *text,
                          ExtTest *test_data,
                          const XML_Char *expected,
                          const char *file, int line)
