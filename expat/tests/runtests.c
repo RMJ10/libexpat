@@ -1389,7 +1389,7 @@ START_TEST(test_ext_entity_bad_encoding_2)
     ExtFaults fault = {
         "<!ELEMENT doc (#PCDATA)*>",
         "Unknown encoding not faulted",
-        "unknown-encoding",
+        XML_CHAR_CONST("unknown-encoding"),
         XML_ERROR_UNKNOWN_ENCODING
     };
 
