@@ -2073,7 +2073,7 @@ START_TEST(test_multichar_cdata_utf16)
         "\0<\0a\0>\0<\0!\0[\0C\0D\0A\0T\0A\0["
         "\xd8\x34\xdd\x5e\xd8\x34\xdd\x5f"
         "\0]\0]\0>\0<\0/\0a\0>";
-    const char *expected = "\xf0\x9d\x85\x9e\xf0\x9d\x85\x9f";
+    const XML_Char *expected = XML_CHAR_CONST("\xf0\x9d\x85\x9e\xf0\x9d\x85\x9f");
     CharData storage;
 
     CharData_Init(&storage);
