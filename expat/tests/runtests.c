@@ -4340,10 +4340,12 @@ external_entity_public(XML_Parser parser,
     ext_parser = XML_ExternalEntityParserCreate(parser, context, NULL);
     if (ext_parser == NULL)
         return XML_STATUS_ERROR;
-    if (systemId != NULL && !strcmp(systemId, "http://example.org/")) {
+    if (systemId != NULL &&
+        !XML_CHAR_strcmp(systemId, XML_CHAR_CONST("http://example.org/"))) {
         text = text1;
     }
-    else if (publicId != NULL && !strcmp(publicId, "foo")) {
+    else if (publicId != NULL &&
+             !XML_CHAR_strcmp(publicId, XML_CHAR_CONST("foo"))) {
         text = text2;
     }
     else
