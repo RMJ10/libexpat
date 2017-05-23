@@ -4941,9 +4941,10 @@ default_matching_handler(void *userData,
                          const XML_Char *s,
                          int len)
 {
-    const char *target = (const char *)userData;
+    const XML_Char *target = (const XML_Char *)userData;
 
-    if ((int)strlen(target) == len && !strncmp(target, s, len))
+    if ((int)XML_CHAR_strlen(target) == len &&
+        !XML_CHAR_strncmp(target, s, len))
         dummy_handler_flags |= DUMMY_DEFAULT_HANDLER_FLAG;
 }
 
@@ -4951,7 +4952,7 @@ START_TEST(test_pi_handled_in_default)
 {
 #define PI_TEXT "<?test processing instruction?>"
     const char *text = PI_TEXT "\n<doc/>";
-    char pi_text[] = PI_TEXT;
+    XML_Char pi_text[] = XML_CHAR_CONST(PI_TEXT);
 
     XML_SetDefaultHandler(parser, default_matching_handler);
     XML_SetUserData(parser, pi_text);
@@ -4970,7 +4971,7 @@ START_TEST(test_comment_handled_in_default)
 {
 #define COMMENT_TEXT "<!-- This is a comment -->"
     const char *text = COMMENT_TEXT "\n<doc/>";
-    char comment_text[] = COMMENT_TEXT;
+    XML_Char comment_text[] = XML_CHAR_CONST(COMMENT_TEXT);
 
     XML_SetDefaultHandler(parser, default_matching_handler);
     XML_SetUserData(parser, comment_text);
