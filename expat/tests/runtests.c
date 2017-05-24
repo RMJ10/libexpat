@@ -6459,7 +6459,7 @@ unknown_released_encoding_handler(void *UNUSED_P(data),
                                   const XML_Char *encoding,
                                   XML_Encoding *info)
 {
-    if (!strcmp(encoding, "unsupported-encoding")) {
+    if (!XML_CHAR_strcmp(encoding, XML_CHAR_CONST("unsupported-encoding"))) {
         int i;
 
         for (i = 0; i < 256; i++)
