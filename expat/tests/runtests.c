@@ -5672,7 +5672,8 @@ START_TEST(test_misc_alloc_create_parser_with_encoding)
     /* Try several levels of allocation */
     for (i = 0; i < 10; i++) {
         allocation_count = i;
-        parser = XML_ParserCreate_MM("us-ascii", &memsuite, NULL);
+        parser = XML_ParserCreate_MM(XML_CHAR_CONST("us-ascii"),
+                                     &memsuite, NULL);
         if (parser != NULL)
             break;
     }
