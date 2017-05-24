@@ -9719,8 +9719,8 @@ START_TEST(test_nsalloc_realloc_long_ge_name)
         ";"
         "</doc>";
     ExtOption options[] = {
-        { "foo", "<!ELEMENT el EMPTY>" },
-        { "bar", "<el/>" },
+        { XML_CHAR_CONST("foo"), "<!ELEMENT el EMPTY>" },
+        { XML_CHAR_CONST("bar"), "<el/>" },
         { NULL, NULL }
     };
     int i;
