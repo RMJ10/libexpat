@@ -10024,8 +10024,8 @@ START_TEST(test_nsalloc_prefixed_element)
         "&en;"
         "</pfx:element>";
     ExtOption options[] = {
-        { "foo", "<!ELEMENT e EMPTY>" },
-        { "bar", "<e/>" },
+        { XML_CHAR_CONST("foo"), "<!ELEMENT e EMPTY>" },
+        { XML_CHAR_CONST("bar"), "<e/>" },
         { NULL, NULL }
     };
     int i;
