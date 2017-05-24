@@ -9426,8 +9426,8 @@ static void
 context_realloc_test(XML_Parser parser, const char *text)
 {
     ExtOption options[] = {
-        { "foo", "<!ELEMENT e EMPTY>"},
-        { "bar", "<e/>" },
+        { XML_CHAR_CONST("foo"), "<!ELEMENT e EMPTY>"},
+        { XML_CHAR_CONST("bar"), "<e/>" },
         { NULL, NULL }
     };
     int i;
