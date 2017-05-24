@@ -8352,8 +8352,8 @@ START_TEST(test_alloc_long_notation)
         "]>\n"
         "<doc>&e2;</doc>";
     ExtOption options[] = {
-        { "foo", "Entity Foo" },
-        { "bar", "Entity Bar" },
+        { XML_CHAR_CONST("foo"), "Entity Foo" },
+        { XML_CHAR_CONST("bar"), "Entity Bar" },
         { NULL, NULL }
     };
     int i;
