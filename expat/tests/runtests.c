@@ -6606,7 +6606,7 @@ END_TEST
 /* Test robustness of XML_SetBase against a failing allocator */
 START_TEST(test_alloc_set_base)
 {
-    const XML_Char *new_base = "/local/file/name.xml";
+    const XML_Char *new_base = XML_CHAR_CONST("/local/file/name.xml");
     int i;
 
     for (i = 0; i < 5; i++) {
