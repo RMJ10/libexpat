@@ -15,35 +15,42 @@
 #define MAP_FILE 0
 #endif
 
+#include "expat.h"
 #include "filemap.h"
+#include "xmltchar.h"
 
 int
-filemap(const char *name,
-        void (*processor)(const void *, size_t, const char *, void *arg),
+filemap(const XML_Char *name,
+        void (*processor)(const void *, size_t, const XML_Char *, void *arg),
         void *arg)
 {
+  T_FN_START;
   int fd;
   size_t nbytes;
   struct stat sb;
   void *p;
 
-  fd = open(name, O_RDONLY);
+  fd = topen(name, O_RDONLY);
   if (fd < 0) {
-    perror(name);
+    tperror(name);
+    T_FN_END;
     return 0;
   }
   if (fstat(fd, &sb) < 0) {
-    perror(name);
+    tperror(name);
     close(fd);
+    T_FN_END;
     return 0;
   }
   if (!S_ISREG(sb.st_mode)) {
     close(fd);
-    fprintf(stderr, "%s: not a regular file\n", name);
+    ftprintf(stderr, TSTR("%s: not a regular file\n"), name);
+    T_FN_END;
     return 0;
   }
   if (sb.st_size > XML_MAX_CHUNK_LEN) {
     close(fd);
+    T_FN_END;
     return 2;  /* Cannot be passed to XML_Parse in one go */
   }
 
@@ -53,17 +60,20 @@ filemap(const char *name,
     static const char c = '\0';
     processor(&c, 0, name, arg);
     close(fd);
+    T_FN_END;
     return 1;
   }
   p = (void *)mmap((void *)0, (size_t)nbytes, PROT_READ,
                    MAP_FILE|MAP_PRIVATE, fd, (off_t)0);
   if (p == (void *)-1) {
-    perror(name);
+    tperror(name);
     close(fd);
+    T_FN_END;
     return 0;
   }
   processor(p, nbytes, name, arg);
   munmap((void *)p, nbytes);
   close(fd);
+  T_FN_END;
   return 1;
 }

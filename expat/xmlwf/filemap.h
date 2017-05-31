@@ -16,14 +16,7 @@
 #define XML_MAX_CHUNK_LEN  (INT_MAX / 2 + 1)
 
 
-#ifdef XML_UNICODE
-int filemap(const wchar_t *name,
+int filemap(const XML_Char *name,
             void (*processor)(const void *, size_t,
-                              const wchar_t *, void *arg),
+                              const XML_Char *, void *arg),
             void *arg);
-#else
-int filemap(const char *name,
-            void (*processor)(const void *, size_t,
-                              const char *, void *arg),
-            void *arg);
-#endif

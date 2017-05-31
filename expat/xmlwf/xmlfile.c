@@ -62,16 +62,18 @@ processStream(const XML_Char *filename, XML_Parser parser);
 static void
 reportError(XML_Parser parser, const XML_Char *filename)
 {
+  T_FN_START;
   enum XML_Error code = XML_GetErrorCode(parser);
-  const XML_Char *message = XML_ErrorString(code);
+  const XML_LChar *message = XML_ErrorString(code);
   if (message)
-    ftprintf(stdout, T("%s:%" XML_FMT_INT_MOD "u:%" XML_FMT_INT_MOD "u: %s\n"),
+    ftprintf(stdout, TSTR("%s:%" XML_FMT_INT_MOD "u:%" XML_FMT_INT_MOD "u: %s\n"),
              filename,
              XML_GetErrorLineNumber(parser),
              XML_GetErrorColumnNumber(parser),
              message);
   else
-    ftprintf(stderr, T("%s: (unknown message %d)\n"), filename, code);
+    ftprintf(stderr, TSTR("%s: (unknown message %d)\n"), filename, code);
+  T_FN_END;
 }
  
 /* This implementation will give problems on files larger than INT_MAX. */
@@ -94,7 +96,7 @@ processFile(const void *data, size_t size,
 static int
 isAsciiLetter(XML_Char c)
 {
-  return (T('a') <= c && c <= T('z')) || (T('A') <= c && c <= T('Z'));
+  return (TCH('a') <= c && c <= TCH('z')) || (TCH('A') <= c && c <= TCH('Z'));
 }
 
 #endif /* _WIN32 */
@@ -106,10 +108,10 @@ resolveSystemId(const XML_Char *base, const XML_Char *systemId,
   XML_Char *s;
   *toFree = 0;
   if (!base
-      || *systemId == T('/')
+      || *systemId == TCH('/')
 #if defined(_WIN32)
-      || *systemId == T('\\')
-      || (isAsciiLetter(systemId[0]) && systemId[1] == T(':'))
+      || *systemId == TCH('\\')
+      || (isAsciiLetter(systemId[0]) && systemId[1] == TCH(':'))
 #endif
      )
     return systemId;
@@ -119,11 +121,11 @@ resolveSystemId(const XML_Char *base, const XML_Char *systemId,
     return systemId;
   tcscpy(*toFree, base);
   s = *toFree;
-  if (tcsrchr(s, T('/')))
-    s = tcsrchr(s, T('/')) + 1;
+  if (tcsrchr(s, TCH('/')))
+    s = tcsrchr(s, TCH('/')) + 1;
 #if defined(_WIN32)
-  if (tcsrchr(s, T('\\')))
-    s = tcsrchr(s, T('\\')) + 1;
+  if (tcsrchr(s, TCH('\\')))
+    s = tcsrchr(s, TCH('\\')) + 1;
 #endif
   tcscpy(s, systemId);
   return *toFree;
@@ -136,6 +138,7 @@ externalEntityRefFilemap(XML_Parser parser,
                          const XML_Char *systemId,
                          const XML_Char *UNUSED_P(publicId))
 {
+  T_FN_START;
   int result;
   XML_Char *s;
   const XML_Char *filename;
@@ -152,19 +155,21 @@ externalEntityRefFilemap(XML_Parser parser,
     result = 0;
     break;
   case 2:
-    ftprintf(stderr, T("%s: file too large for memory-mapping")
-        T(", switching to streaming\n"), filename);
+    ftprintf(stderr, TSTR("%s: file too large for memory-mapping"
+                          ", switching to streaming\n"), filename);
     result = processStream(filename, entParser);
     break;
   }
   free(s);
   XML_ParserFree(entParser);
+  T_FN_END;
   return result;
 }
 
 static int
 processStream(const XML_Char *filename, XML_Parser parser)
 {
+  T_FN_START;
   /* passing NULL for filename means read intput from stdin */
   int fd = 0;   /* 0 is the fileno for stdin */
 
@@ -172,6 +177,7 @@ processStream(const XML_Char *filename, XML_Parser parser)
     fd = topen(filename, O_BINARY|O_RDONLY);
     if (fd < 0) {
       tperror(filename);
+      T_FN_END;
       return 0;
     }
   }
@@ -181,21 +187,24 @@ processStream(const XML_Char *filename, XML_Parser parser)
     if (!buf) {
       if (filename != NULL)
         close(fd);
-      ftprintf(stderr, T("%s: out of memory\n"),
-               filename != NULL ? filename : "xmlwf");
+      ftprintf(stderr, TSTR("%s: out of memory\n"),
+               filename != NULL ? filename : TSTR("xmlwf"));
+      T_FN_END;
       return 0;
     }
     nread = read(fd, buf, READ_SIZE);
     if (nread < 0) {
-      tperror(filename != NULL ? filename : "STDIN");
+      tperror(filename != NULL ? filename : TSTR("STDIN"));
       if (filename != NULL)
         close(fd);
+      T_FN_END;
       return 0;
     }
     if (XML_ParseBuffer(parser, nread, nread == 0) == XML_STATUS_ERROR) {
-      reportError(parser, filename != NULL ? filename : "STDIN");
+      reportError(parser, filename != NULL ? filename : TSTR("STDIN"));
       if (filename != NULL)
         close(fd);
+      T_FN_END;
       return 0;
     }
     if (nread == 0) {
@@ -204,6 +213,7 @@ processStream(const XML_Char *filename, XML_Parser parser)
       break;;
     }
   }
+  T_FN_END;
   return 1;
 }
 
@@ -231,10 +241,12 @@ XML_ProcessFile(XML_Parser parser,
                 const XML_Char *filename,
                 unsigned flags)
 {
+  T_FN_START;
   int result;
 
   if (!XML_SetBase(parser, filename)) {
-    ftprintf(stderr, T("%s: out of memory"), filename);
+    ftprintf(stderr, TSTR("%s: out of memory"), filename);
+    T_FN_END;
     exit(1);
   }
 
@@ -254,13 +266,14 @@ XML_ProcessFile(XML_Parser parser,
       result = 0;
       break;
     case 2:
-      ftprintf(stderr, T("%s: file too large for memory-mapping")
-          T(", switching to streaming\n"), filename);
+      ftprintf(stderr, TSTR("%s: file too large for memory-mapping"
+                            ", switching to streaming\n"), filename);
       result = processStream(filename, parser);
       break;
     }
   }
   else
     result = processStream(filename, parser);
+  T_FN_END;
   return result;
 }
