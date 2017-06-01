@@ -25,6 +25,7 @@
 #include "internal.h"  /* for UNUSED_P only */
 #include "minicheck.h"
 #include "memcheck.h"
+#include "unicode.h"
 
 #if defined(__amigaos__) && defined(__USE_INLINE__)
 #include <proto/expat.h>
@@ -320,11 +321,14 @@ _run_attribute_check(const char *text, const XML_Char *expected,
 /* Regression test for SF bug #491986. */
 START_TEST(test_danish_latin1)
 {
+    TSTR_FN_START;
     const char *text =
         "<?xml version='1.0' encoding='iso-8859-1'?>\n"
         "<e>J\xF8rgen \xE6\xF8\xE5\xC6\xD8\xC5</e>";
     run_character_check(text,
-             "J\xC3\xB8rgen \xC3\xA6\xC3\xB8\xC3\xA5\xC3\x86\xC3\x98\xC3\x85");
+                        TSTR("J\xC3\xB8rgen \xC3\xA6\xC3\xB8\xC3\xA5"
+                             "\xC3\x86\xC3\x98\xC3\x85"));
+    TSTR_FN_END;
 }
 END_TEST
 
@@ -332,40 +336,51 @@ END_TEST
 /* Regression test for SF bug #514281. */
 START_TEST(test_french_charref_hexidecimal)
 {
+    TSTR_FN_START;
     const char *text =
         "<?xml version='1.0' encoding='iso-8859-1'?>\n"
         "<doc>&#xE9;&#xE8;&#xE0;&#xE7;&#xEA;&#xC8;</doc>";
     run_character_check(text,
-                        "\xC3\xA9\xC3\xA8\xC3\xA0\xC3\xA7\xC3\xAA\xC3\x88");
+                        TSTR("\xC3\xA9\xC3\xA8\xC3\xA0\xC3\xA7\xC3\xAA"
+                             "\xC3\x88"));
+    TSTR_FN_END;
 }
 END_TEST
 
 START_TEST(test_french_charref_decimal)
 {
+    TSTR_FN_START;
     const char *text =
         "<?xml version='1.0' encoding='iso-8859-1'?>\n"
         "<doc>&#233;&#232;&#224;&#231;&#234;&#200;</doc>";
     run_character_check(text,
-                        "\xC3\xA9\xC3\xA8\xC3\xA0\xC3\xA7\xC3\xAA\xC3\x88");
+                        TSTR("\xC3\xA9\xC3\xA8\xC3\xA0\xC3\xA7\xC3\xAA"
+                             "\xC3\x88"));
+    TSTR_FN_END;
 }
 END_TEST
 
 START_TEST(test_french_latin1)
 {
+    TSTR_FN_START;
     const char *text =
         "<?xml version='1.0' encoding='iso-8859-1'?>\n"
         "<doc>\xE9\xE8\xE0\xE7\xEa\xC8</doc>";
     run_character_check(text,
-                        "\xC3\xA9\xC3\xA8\xC3\xA0\xC3\xA7\xC3\xAA\xC3\x88");
+                        TSTR("\xC3\xA9\xC3\xA8\xC3\xA0\xC3\xA7\xC3\xAA"
+                             "\xC3\x88"));
+    TSTR_FN_END;
 }
 END_TEST
 
 START_TEST(test_french_utf8)
 {
+    TSTR_FN_START;
     const char *text =
         "<?xml version='1.0' encoding='utf-8'?>\n"
         "<doc>\xC3\xA9</doc>";
-    run_character_check(text, "\xC3\xA9");
+    run_character_check(text, TSTR("\xC3\xA9"));
+    TSTR_FN_END;
 }
 END_TEST
 
@@ -376,8 +391,10 @@ END_TEST
 */
 START_TEST(test_utf8_false_rejection)
 {
+    TSTR_FN_START;
     const char *text = "<doc>\xEF\xBA\xBF</doc>";
-    run_character_check(text, "\xEF\xBA\xBF");
+    run_character_check(text, TSTR("\xEF\xBA\xBF"));
+    TSTR_FN_END;
 }
 END_TEST
 
@@ -513,17 +530,19 @@ END_TEST
 /* Regression test for SF bug #481609, #774028. */
 START_TEST(test_latin1_umlauts)
 {
+    TSTR_FN_START;
     const char *text =
         "<?xml version='1.0' encoding='iso-8859-1'?>\n"
         "<e a='\xE4 \xF6 \xFC &#228; &#246; &#252; &#x00E4; &#x0F6; &#xFC; >'\n"
         "  >\xE4 \xF6 \xFC &#228; &#246; &#252; &#x00E4; &#x0F6; &#xFC; ></e>";
-    const char *utf8 =
-        "\xC3\xA4 \xC3\xB6 \xC3\xBC "
-        "\xC3\xA4 \xC3\xB6 \xC3\xBC "
-        "\xC3\xA4 \xC3\xB6 \xC3\xBC >";
-    run_character_check(text, utf8);
+    const XML_Char *expected =
+        TSTR("\xC3\xA4 \xC3\xB6 \xC3\xBC "
+             "\xC3\xA4 \xC3\xB6 \xC3\xBC "
+             "\xC3\xA4 \xC3\xB6 \xC3\xBC >");
+    run_character_check(text, expected);
     XML_ParserReset(parser, NULL);
-    run_attribute_check(text, utf8);
+    run_attribute_check(text, expected);
+    TSTR_FN_END;
 }
 END_TEST
 
