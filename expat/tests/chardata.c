@@ -14,6 +14,7 @@
 #include <string.h>
 
 #include "chardata.h"
+#include "unicode.h"
 
 
 static int
@@ -87,9 +88,13 @@ CharData_CheckString(CharData *storage, const char *expected)
     count = (storage->count < 0) ? 0 : storage->count;
     len = strlen(expected);
     if (len != count) {
-        if (sizeof(XML_Char) == 1)
+        if (sizeof(XML_Char) == 1) {
+            TSTR_FN_START;
             sprintf(buffer, "wrong number of data characters:"
-                    " got %d, expected %d:\n%s", count, len, storage->data);
+                    " got %d, expected %d:\n%s", count, len,
+                    TSTR2CHAR(storage->data));
+            TSTR_FN_END;
+        }
         else
             sprintf(buffer,
                     "wrong number of data characters: got %d, expected %d",
