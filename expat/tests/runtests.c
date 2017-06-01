@@ -589,29 +589,33 @@ static void XMLCALL
 start_element_event_handler2(void *userData, const XML_Char *name,
 			     const XML_Char **UNUSED_P(attr))
 {
+    TSTR_FN_START;
     CharData *storage = (CharData *) userData;
     char buffer[100];
 
     sprintf(buffer,
         "<%s> at col:%" XML_FMT_INT_MOD "u line:%"\
-            XML_FMT_INT_MOD "u\n", name,
+            XML_FMT_INT_MOD "u\n", TSTR2CHAR(name),
 	    XML_GetCurrentColumnNumber(parser),
 	    XML_GetCurrentLineNumber(parser));
     CharData_AppendString(storage, buffer);
+    TSTR_FN_END;
 }
 
 static void XMLCALL
 end_element_event_handler2(void *userData, const XML_Char *name)
 {
+    TSTR_FN_START;
     CharData *storage = (CharData *) userData;
     char buffer[100];
 
     sprintf(buffer,
         "</%s> at col:%" XML_FMT_INT_MOD "u line:%"\
-            XML_FMT_INT_MOD "u\n", name,
+            XML_FMT_INT_MOD "u\n", TSTR2CHAR(name),
 	    XML_GetCurrentColumnNumber(parser),
 	    XML_GetCurrentLineNumber(parser));
     CharData_AppendString(storage, buffer);
+    TSTR_FN_END;
 }
 
 /* Regression test #3 for SF bug #653180. */
