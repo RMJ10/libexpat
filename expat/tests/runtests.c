@@ -22,6 +22,7 @@
 
 #include "expat.h"
 #include "chardata.h"
+#include "elementdata.h"
 #include "internal.h"  /* for UNUSED_P only */
 #include "minicheck.h"
 #include "memcheck.h"
@@ -589,33 +590,21 @@ static void XMLCALL
 start_element_event_handler2(void *userData, const XML_Char *name,
 			     const XML_Char **UNUSED_P(attr))
 {
-    TSTR_FN_START;
-    CharData *storage = (CharData *) userData;
-    char buffer[100];
+    ElementData *storage = (ElementData *) userData;
 
-    sprintf(buffer,
-        "<%s> at col:%" XML_FMT_INT_MOD "u line:%"\
-            XML_FMT_INT_MOD "u\n", TSTR2CHAR(name),
-	    XML_GetCurrentColumnNumber(parser),
-	    XML_GetCurrentLineNumber(parser));
-    CharData_AppendString(storage, buffer);
-    TSTR_FN_END;
+    ElementData_AddData(storage, name,
+                        XML_GetCurrentLineNumber(parser),
+                        XML_GetCurrentColumnNumber(parser), 0);
 }
 
 static void XMLCALL
 end_element_event_handler2(void *userData, const XML_Char *name)
 {
-    TSTR_FN_START;
-    CharData *storage = (CharData *) userData;
-    char buffer[100];
+    ElementData *storage = (ElementData *) userData;
 
-    sprintf(buffer,
-        "</%s> at col:%" XML_FMT_INT_MOD "u line:%"\
-            XML_FMT_INT_MOD "u\n", TSTR2CHAR(name),
-	    XML_GetCurrentColumnNumber(parser),
-	    XML_GetCurrentLineNumber(parser));
-    CharData_AppendString(storage, buffer);
-    TSTR_FN_END;
+    ElementData_AddData(storage, name,
+                        XML_GetCurrentLineNumber(parser),
+                        XML_GetCurrentColumnNumber(parser), 1);
 }
 
 /* Regression test #3 for SF bug #653180. */
@@ -630,27 +619,31 @@ START_TEST(test_line_and_column_numbers_inside_handlers)
         "    <f/>\n"
         "  </d>\n"
         "</a>";
-    const char *expected =
-        "<a> at col:0 line:1\n"
-        "<b> at col:2 line:2\n"
-        "<c> at col:4 line:3\n"
-        "</c> at col:8 line:3\n"
-        "</b> at col:2 line:4\n"
-        "<d> at col:2 line:5\n"
-        "<f> at col:4 line:6\n"
-        "</f> at col:8 line:6\n"
-        "</d> at col:2 line:7\n"
-        "</a> at col:0 line:8\n";
-    CharData storage;
+    const ElementResults expected = {
+        10,
+        {
+            { "a", 1, 0, 0 },
+            { "b", 2, 2, 0 },
+            { "c", 3, 4, 0 },
+            { "c", 3, 8, 1 },
+            { "b", 4, 2, 1 },
+            { "d", 5, 2, 0 },
+            { "f", 6, 4, 0 },
+            { "f", 6, 8, 1 },
+            { "d", 7, 2, 1 },
+            { "a", 8, 0, 1 }
+        }
+    };
+    ElementData storage;
 
-    CharData_Init(&storage);
+    ElementData_Init(&storage);
     XML_SetUserData(parser, &storage);
     XML_SetStartElementHandler(parser, start_element_event_handler2);
     XML_SetEndElementHandler(parser, end_element_event_handler2);
     if (_XML_Parse_SINGLE_BYTES(parser, text, strlen(text), XML_TRUE) == XML_STATUS_ERROR)
         xml_failure(parser);
 
-    CharData_CheckString(&storage, expected); 
+    ElementData_CheckData(&storage, &expected);
 }
 END_TEST
 

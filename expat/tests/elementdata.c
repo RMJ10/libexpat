@@ -52,7 +52,8 @@ ElementData_AddData(ElementData *storage, const XML_Char *name,
 }
 
 
-int ElementData_CheckData(ElementData *storage, ElementResults *expected)
+int ElementData_CheckData(ElementData *storage,
+                          const ElementResults *expected)
 {
     TSTR_FN_START;
     int i;

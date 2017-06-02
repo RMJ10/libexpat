@@ -45,7 +45,7 @@ extern void ElementData_Init(ElementData *storage);
 extern void ElementData_AddData(ElementData *storage, const XML_Char *name,
                                 int line, int column, int is_end);
 extern int ElementData_CheckData(ElementData *storage,
-                                 ElementResults *expected);
+                                 const ElementResults *expected);
 
 #ifdef __cplusplus
 }
