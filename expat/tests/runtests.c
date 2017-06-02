@@ -1169,6 +1169,7 @@ END_TEST
 /* Regression test for SF bug #483514. */
 START_TEST(test_dtd_default_handling)
 {
+    TSTR_FN_START;
     const char *text =
         "<!DOCTYPE doc [\n"
         "<!ENTITY e SYSTEM 'http://xml.libexpat.org/e'>\n"
@@ -1190,7 +1191,8 @@ START_TEST(test_dtd_default_handling)
     XML_SetCommentHandler(parser, dummy_comment_handler);
     XML_SetStartCdataSectionHandler(parser, dummy_start_cdata_handler);
     XML_SetEndCdataSectionHandler(parser, dummy_end_cdata_handler);
-    run_character_check(text, "\n\n\n\n\n\n\n<doc/>");
+    run_character_check(text, TSTR("\n\n\n\n\n\n\n<doc/>"));
+    TSTR_FN_END;
 }
 END_TEST
 
