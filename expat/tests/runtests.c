@@ -893,17 +893,22 @@ END_TEST
 
 /* Regression test for SF bug #584832. */
 static int XMLCALL
-UnknownEncodingHandler(void *UNUSED_P(data),const XML_Char *encoding,XML_Encoding *info)
+UnknownEncodingHandler(void *UNUSED_P(data),
+                       const XML_Char *encoding,
+                       XML_Encoding *info)
 {
-    if (strcmp(encoding,"unsupported-encoding") == 0) {
+    TSTR_FN_START;
+    if (TSTR_CMP(encoding, TSTR("unsupported-encoding")) == 0) {
         int i;
         for (i = 0; i < 256; ++i)
             info->map[i] = i;
         info->data = NULL;
         info->convert = NULL;
         info->release = NULL;
+        TSTR_FN_END;
         return XML_STATUS_OK;
     }
+    TSTR_FN_END;
     return XML_STATUS_ERROR;
 }
 
