@@ -1767,19 +1767,21 @@ END_TEST
 /* Test XML Base is set and unset appropriately */
 START_TEST(test_set_base)
 {
+    TSTR_FN_START;
     const XML_Char *old_base;
-    const XML_Char *new_base = "/local/file/name.xml";
+    const XML_Char *new_base = TSTR("/local/file/name.xml");
 
     old_base = XML_GetBase(parser);
     if (XML_SetBase(parser, new_base) != XML_STATUS_OK)
         fail("Unable to set base");
-    if (strcmp(XML_GetBase(parser), new_base) != 0)
+    if (TSTR_CMP(XML_GetBase(parser), new_base) != 0)
         fail("Base setting not correct");
     if (XML_SetBase(parser, NULL) != XML_STATUS_OK)
         fail("Unable to NULL base");
     if (XML_GetBase(parser) != NULL)
         fail("Base setting not nulled");
     XML_SetBase(parser, old_base);
+    TSTR_FN_END;
 }
 END_TEST
 
