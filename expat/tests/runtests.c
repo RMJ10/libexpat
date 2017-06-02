@@ -2068,18 +2068,18 @@ END_TEST
 /* Test setting an explicit encoding */
 START_TEST(test_explicit_encoding)
 {
-    
+    TSTR_FN_START;
     const char *text1 = "<doc>Hello ";
     const char *text2 = " World</doc>";
 
     /* First say we are UTF-8 */
-    if (XML_SetEncoding(parser, "utf-8") != XML_STATUS_OK)
+    if (XML_SetEncoding(parser, TSTR("utf-8")) != XML_STATUS_OK)
         fail("Failed to set explicit encoding");
     if (_XML_Parse_SINGLE_BYTES(parser, text1, strlen(text1),
                                 XML_FALSE) == XML_STATUS_ERROR)
         xml_failure(parser);
     /* Try to switch encodings mid-parse */
-    if (XML_SetEncoding(parser, "us-ascii") != XML_STATUS_ERROR)
+    if (XML_SetEncoding(parser, TSTR("us-ascii")) != XML_STATUS_ERROR)
         fail("Allowed encoding change");
     if (_XML_Parse_SINGLE_BYTES(parser, text2, strlen(text2),
                                 XML_TRUE) == XML_STATUS_ERROR)
@@ -2087,6 +2087,7 @@ START_TEST(test_explicit_encoding)
     /* Try now the parse is over */
     if (XML_SetEncoding(parser, NULL) != XML_STATUS_OK)
         fail("Failed to unset encoding");
+    TSTR_FN_END;
 }
 END_TEST
 
