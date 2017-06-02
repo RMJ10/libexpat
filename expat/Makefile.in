@@ -167,12 +167,13 @@ tests/chardata.@OBJEXT@: tests/chardata.c tests/chardata.h
 tests/minicheck.@OBJEXT@: tests/minicheck.c tests/minicheck.h
 tests/memcheck.@OBJEXT@: tests/memcheck.c tests/memcheck.h
 tests/unicode.@OBJEXT@: tests/unicode.c tests/unicode.h tests/minicheck.h
-tests/runtests.@OBJEXT@: tests/runtests.c tests/chardata.h tests/memcheck.h tests/unicode.h
-tests/runtests: tests/runtests.@OBJEXT@ tests/chardata.@OBJEXT@ tests/minicheck.@OBJEXT@ tests/memcheck.@OBJEXT@ tests/unicode.@OBJEXT@ $(LIBRARY)
-	$(LINK_EXE) tests/runtests.@OBJEXT@ tests/chardata.@OBJEXT@ tests/minicheck.@OBJEXT@ tests/memcheck.@OBJEXT@ tests/unicode.@OBJEXT@ $(LIBRARY)
-tests/runtestspp.@OBJEXT@: tests/runtestspp.cpp tests/runtests.c tests/chardata.h tests/memcheck.h tests/unicode.h
-tests/runtestspp: tests/runtestspp.@OBJEXT@ tests/chardata.@OBJEXT@ tests/minicheck.@OBJEXT@ tests/memcheck.@OBJEXT@ tests/unicode.@OBJEXT@ $(LIBRARY)
-	$(LINK_CXX_EXE) tests/runtestspp.@OBJEXT@ tests/chardata.@OBJEXT@ tests/minicheck.@OBJEXT@ tests/memcheck.@OBJEXT@ tests/unicode.@OBJEXT@ $(LIBRARY)
+tests/elementdata.@OBJECT@: tests/elementdata.c tests/elementdata.h tests/minicheck.h tests/unicode.h
+tests/runtests.@OBJEXT@: tests/runtests.c tests/chardata.h tests/memcheck.h tests/unicode.h tests/elementdata.h
+tests/runtests: tests/runtests.@OBJEXT@ tests/chardata.@OBJEXT@ tests/minicheck.@OBJEXT@ tests/memcheck.@OBJEXT@ tests/unicode.@OBJEXT@ tests/elementdata.@OBJEXT@ $(LIBRARY)
+	$(LINK_EXE) tests/runtests.@OBJEXT@ tests/chardata.@OBJEXT@ tests/minicheck.@OBJEXT@ tests/memcheck.@OBJEXT@ tests/unicode.@OBJEXT@ tests/elementdata.@OBJEXT@ $(LIBRARY)
+tests/runtestspp.@OBJEXT@: tests/runtestspp.cpp tests/runtests.c tests/chardata.h tests/memcheck.h tests/unicode.h tests/elementdata.h
+tests/runtestspp: tests/runtestspp.@OBJEXT@ tests/chardata.@OBJEXT@ tests/minicheck.@OBJEXT@ tests/memcheck.@OBJEXT@ tests/unicode.@OBJEXT@ tests/elementdata.@OBJEXT@ $(LIBRARY)
+	$(LINK_CXX_EXE) tests/runtestspp.@OBJEXT@ tests/chardata.@OBJEXT@ tests/minicheck.@OBJEXT@ tests/memcheck.@OBJEXT@ tests/unicode.@OBJEXT@ tests/elementdata.@OBJEXT@ $(LIBRARY)
 
 tests/benchmark/benchmark.@OBJEXT@: tests/benchmark/benchmark.c
 tests/benchmark/benchmark: tests/benchmark/benchmark.@OBJEXT@ $(LIBRARY)

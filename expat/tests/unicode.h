@@ -53,9 +53,12 @@ typedef struct tstring_s {
 #define TSTR(x) tstring_create_utf16(&_tstring_list_head, (x))
 #define TSTR2CHAR(x) tstring_create_utf8(&_tstring_list_head, (x))
 
+#define TSTR_CMP(s, t) tstring_cmp((s), (t))
+
 extern const XML_Char *tstring_create_utf16(TString **phead, const char *s);
 extern const char *tstring_create_utf8(TString **phead, const XML_Char *s);
 extern void tstring_dispose(TString *head);
+extern int tstring_cmp(const XML_Char *s1, const XML_Char *s2);
 
 #endif /* !XML_UNICODE_WCHAR_T */
 #else /* !XML_UNICODE */
@@ -66,6 +69,8 @@ extern void tstring_dispose(TString *head);
 #define TCH(x) x
 #define TSTR(x) x
 #define TSTR2CHAR(x) x
+
+#define TSTR_CMP(s, t) strcmp((s), (t))
 
 #endif /* !XML_UNICODE */
 

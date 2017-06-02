@@ -200,4 +200,20 @@ tstring_dispose(TString *head)
     }
 }
 
+int
+tstring_cmp(const XML_Char *s1, const XML_Char *s2)
+{
+    while (*s1 && *s2) {
+        if (*s1 < *s2)
+            return -1;
+        if (*s1++ > *s2++)
+            return 1;
+    }
+    if (*s1 < *s2)
+        return -1;
+    if (*s1 > *s2)
+        return 1;
+    return 0;
+}
+
 #endif /* defined (XML_UNICODE) && !defined(XML_UNICODE_WCHAR_T) */
