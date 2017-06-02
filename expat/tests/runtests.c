@@ -967,6 +967,7 @@ external_entity_loader_set_encoding(XML_Parser parser,
     /* This text says it's an unsupported encoding, but it's really
        UTF-8, which we tell Expat using XML_SetEncoding().
     */
+    TSTR_FN_START;
     const char *text =
         "<?xml encoding='iso-8859-3'?>"
         "\xC3\xA9";
@@ -975,18 +976,21 @@ external_entity_loader_set_encoding(XML_Parser parser,
     extparser = XML_ExternalEntityParserCreate(parser, context, NULL);
     if (extparser == NULL)
         fail("Could not create external entity parser.");
-    if (!XML_SetEncoding(extparser, "utf-8"))
+    if (!XML_SetEncoding(extparser, TSTR("utf-8")))
         fail("XML_SetEncoding() ignored for external entity");
     if (  _XML_Parse_SINGLE_BYTES(extparser, text, strlen(text), XML_TRUE)
           == XML_STATUS_ERROR) {
+        TSTR_FN_END;
         xml_failure(parser);
         return 0;
     }
+    TSTR_FN_END;
     return 1;
 }
 
 START_TEST(test_ext_entity_set_encoding)
 {
+    TSTR_FN_START;
     const char *text =
         "<!DOCTYPE doc [\n"
         "  <!ENTITY en SYSTEM 'http://xml.libexpat.org/dummy.ent'>\n"
@@ -995,7 +999,8 @@ START_TEST(test_ext_entity_set_encoding)
 
     XML_SetExternalEntityRefHandler(parser,
                                     external_entity_loader_set_encoding);
-    run_character_check(text, "\xC3\xA9");
+    run_character_check(text, TSTR("\xC3\xA9"));
+    TSTR_FN_END;
 }
 END_TEST
 
