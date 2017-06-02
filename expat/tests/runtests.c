@@ -779,9 +779,9 @@ is_whitespace_normalized(const XML_Char *s, int is_cdata)
     int blanks = 0;
     int at_start = 1;
     while (*s) {
-        if (*s == ' ')
+        if (*s == TCH(' '))
             ++blanks;
-        else if (*s == '\t' || *s == '\n' || *s == '\r')
+        else if (*s == TCH('\t') || *s == TCH('\n') || *s == TCH('\r'))
             return 0;
         else {
             if (at_start) {
@@ -805,25 +805,27 @@ is_whitespace_normalized(const XML_Char *s, int is_cdata)
 static void
 testhelper_is_whitespace_normalized(void)
 {
-    assert(is_whitespace_normalized("abc", 0));
-    assert(is_whitespace_normalized("abc", 1));
-    assert(is_whitespace_normalized("abc def ghi", 0));
-    assert(is_whitespace_normalized("abc def ghi", 1));
-    assert(!is_whitespace_normalized(" abc def ghi", 0));
-    assert(is_whitespace_normalized(" abc def ghi", 1));
-    assert(!is_whitespace_normalized("abc  def ghi", 0));
-    assert(is_whitespace_normalized("abc  def ghi", 1));
-    assert(!is_whitespace_normalized("abc def ghi ", 0));
-    assert(is_whitespace_normalized("abc def ghi ", 1));
-    assert(!is_whitespace_normalized(" ", 0));
-    assert(is_whitespace_normalized(" ", 1));
-    assert(!is_whitespace_normalized("\t", 0));
-    assert(!is_whitespace_normalized("\t", 1));
-    assert(!is_whitespace_normalized("\n", 0));
-    assert(!is_whitespace_normalized("\n", 1));
-    assert(!is_whitespace_normalized("\r", 0));
-    assert(!is_whitespace_normalized("\r", 1));
-    assert(!is_whitespace_normalized("abc\t def", 1));
+    TSTR_FN_START;
+    assert(is_whitespace_normalized(TSTR("abc"), 0));
+    assert(is_whitespace_normalized(TSTR("abc"), 1));
+    assert(is_whitespace_normalized(TSTR("abc def ghi"), 0));
+    assert(is_whitespace_normalized(TSTR("abc def ghi"), 1));
+    assert(!is_whitespace_normalized(TSTR(" abc def ghi"), 0));
+    assert(is_whitespace_normalized(TSTR(" abc def ghi"), 1));
+    assert(!is_whitespace_normalized(TSTR("abc  def ghi"), 0));
+    assert(is_whitespace_normalized(TSTR("abc  def ghi"), 1));
+    assert(!is_whitespace_normalized(TSTR("abc def ghi "), 0));
+    assert(is_whitespace_normalized(TSTR("abc def ghi "), 1));
+    assert(!is_whitespace_normalized(TSTR(" "), 0));
+    assert(is_whitespace_normalized(TSTR(" "), 1));
+    assert(!is_whitespace_normalized(TSTR("\t"), 0));
+    assert(!is_whitespace_normalized(TSTR("\t"), 1));
+    assert(!is_whitespace_normalized(TSTR("\n"), 0));
+    assert(!is_whitespace_normalized(TSTR("\n"), 1));
+    assert(!is_whitespace_normalized(TSTR("\r"), 0));
+    assert(!is_whitespace_normalized(TSTR("\r"), 1));
+    assert(!is_whitespace_normalized(TSTR("abc\t def"), 1));
+    TSTR_FN_END;
 }
 
 static void XMLCALL
@@ -831,21 +833,24 @@ check_attr_contains_normalized_whitespace(void *UNUSED_P(userData),
                                           const XML_Char *UNUSED_P(name),
                                           const XML_Char **atts)
 {
+    TSTR_FN_START;
     int i;
     for (i = 0; atts[i] != NULL; i += 2) {
         const XML_Char *attrname = atts[i];
         const XML_Char *value = atts[i + 1];
-        if (strcmp("attr", attrname) == 0
-            || strcmp("ents", attrname) == 0
-            || strcmp("refs", attrname) == 0) {
+        if (TSTR_CMP(TSTR("attr"), attrname) == 0
+            || TSTR_CMP(TSTR("ents"), attrname) == 0
+            || TSTR_CMP(TSTR("refs"), attrname) == 0) {
             if (!is_whitespace_normalized(value, 0)) {
                 char buffer[256];
                 sprintf(buffer, "attribute value not normalized: %s='%s'",
-                        attrname, value);
+                        TSTR2CHAR(attrname), TSTR2CHAR(value));
+                TSTR_FN_END;
                 fail(buffer);
             }
         }
     }
+    TSTR_FN_END;
 }
 
 START_TEST(test_attr_whitespace_normalization)
