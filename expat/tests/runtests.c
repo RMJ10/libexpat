@@ -2558,41 +2558,41 @@ START_TEST(test_return_ns_triplet)
 }
 END_TEST
 
+#define START     1
+#define END       2
+#define ATTRIBUTE 3
+
 static void XMLCALL
 overwrite_start_checker(void *userData, const XML_Char *name,
                         const XML_Char **atts)
 {
-    CharData *storage = (CharData *) userData;
-    CharData_AppendString(storage, "start ");
-    CharData_AppendXMLChars(storage, name, -1);
+    ElementData *storage = (ElementData *) userData;
+    ElementData_AddData(storage, name, START, 0, 0);
     while (*atts != NULL) {
-        CharData_AppendString(storage, "\nattribute ");
-        CharData_AppendXMLChars(storage, *atts, -1);
+        ElementData_AddData(storage, *atts, ATTRIBUTE, 0, 0);
         atts += 2;
     }
-    CharData_AppendString(storage, "\n");
 }
 
 static void XMLCALL
 overwrite_end_checker(void *userData, const XML_Char *name)
 {
-    CharData *storage = (CharData *) userData;
-    CharData_AppendString(storage, "end ");
-    CharData_AppendXMLChars(storage, name, -1);
-    CharData_AppendString(storage, "\n");
+    ElementData *storage = (ElementData *) userData;
+    ElementData_AddData(storage, name, END, 0, 0);
 }
 
 static void
-run_ns_tagname_overwrite_test(const char *text, const char *result)
+run_ns_tagname_overwrite_test(const char *text,
+                              const ElementResults *result)
 {
-    CharData storage;
-    CharData_Init(&storage);
+    ElementData storage;
+    ElementData_Init(&storage);
     XML_SetUserData(parser, &storage);
     XML_SetElementHandler(parser,
                           overwrite_start_checker, overwrite_end_checker);
     if (_XML_Parse_SINGLE_BYTES(parser, text, strlen(text), XML_TRUE) == XML_STATUS_ERROR)
         xml_failure(parser);
-    CharData_CheckString(&storage, result);
+    ElementData_CheckData(&storage, result);
 }
 
 /* Regression test for SF bug #566334. */
@@ -2603,16 +2603,20 @@ START_TEST(test_ns_tagname_overwrite)
         "  <n:f n:attr='foo'/>\n"
         "  <n:g n:attr2='bar'/>\n"
         "</n:e>";
-    const char *result =
-        "start http://xml.libexpat.org/ e\n"
-        "start http://xml.libexpat.org/ f\n"
-        "attribute http://xml.libexpat.org/ attr\n"
-        "end http://xml.libexpat.org/ f\n"
-        "start http://xml.libexpat.org/ g\n"
-        "attribute http://xml.libexpat.org/ attr2\n"
-        "end http://xml.libexpat.org/ g\n"
-        "end http://xml.libexpat.org/ e\n";
-    run_ns_tagname_overwrite_test(text, result);
+    const ElementResults result = {
+        8,
+        {
+            { "http://xml.libexpat.org/ e",     START, 0, 0 },
+            { "http://xml.libexpat.org/ f",     START, 0, 0 },
+            { "http://xml.libexpat.org/ attr",  ATTRIBUTE, 0, 0 },
+            { "http://xml.libexpat.org/ f",     END, 0, 0 },
+            { "http://xml.libexpat.org/ g",     START, 0, 0 },
+            { "http://xml.libexpat.org/ attr2", ATTRIBUTE, 0, 0 },
+            { "http://xml.libexpat.org/ g",     END, 0, 0 },
+            { "http://xml.libexpat.org/ e",     END, 0, 0 }
+        }
+    };
+    run_ns_tagname_overwrite_test(text, &result);
 }
 END_TEST
 
@@ -2624,17 +2628,21 @@ START_TEST(test_ns_tagname_overwrite_triplet)
         "  <n:f n:attr='foo'/>\n"
         "  <n:g n:attr2='bar'/>\n"
         "</n:e>";
-    const char *result =
-        "start http://xml.libexpat.org/ e n\n"
-        "start http://xml.libexpat.org/ f n\n"
-        "attribute http://xml.libexpat.org/ attr n\n"
-        "end http://xml.libexpat.org/ f n\n"
-        "start http://xml.libexpat.org/ g n\n"
-        "attribute http://xml.libexpat.org/ attr2 n\n"
-        "end http://xml.libexpat.org/ g n\n"
-        "end http://xml.libexpat.org/ e n\n";
+    const ElementResults result = {
+        8,
+        {
+            { "http://xml.libexpat.org/ e n",     START, 0, 0 },
+            { "http://xml.libexpat.org/ f n",     START, 0, 0 },
+            { "http://xml.libexpat.org/ attr n",  ATTRIBUTE, 0, 0 },
+            { "http://xml.libexpat.org/ f n",     END, 0, 0, },
+            { "http://xml.libexpat.org/ g n",     START, 0, 0 },
+            { "http://xml.libexpat.org/ attr2 n", ATTRIBUTE, 0, 0 },
+            { "http://xml.libexpat.org/ g n",     END, 0, 0 },
+            { "http://xml.libexpat.org/ e n",     END, 0, 0 }
+        }
+    };
     XML_SetReturnNSTriplet(parser, XML_TRUE);
-    run_ns_tagname_overwrite_test(text, result);
+    run_ns_tagname_overwrite_test(text, &result);
 }
 END_TEST
 
