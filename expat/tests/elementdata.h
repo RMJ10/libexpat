@@ -14,7 +14,7 @@
 extern "C" {
 #endif
 
-#define MAX_ELEMENTS 16
+#define MAX_ELEMENTS 32
 #define MAX_ELEMENT_NAME_LEN 32
 
 typedef struct {

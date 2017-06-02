@@ -44,7 +44,10 @@ ElementData_AddData(ElementData *storage, const XML_Char *name,
     assert(storage->count < MAX_ELEMENTS);
     assert(len < MAX_ELEMENT_NAME_LEN);
 
-    memcpy(element->name, name, len * sizeof(XML_Char));
+    if (name == NULL)
+        element->name[0] = 0;
+    else
+        memcpy(element->name, name, len * sizeof(XML_Char));
     element->line = line;
     element->column = column;
     element->is_end = is_end;
