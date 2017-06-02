@@ -2907,20 +2907,26 @@ END_TEST
 /* Test memory allocation failures for a parser with an encoding */
 START_TEST(test_misc_alloc_create_parser_with_encoding)
 {
+    TSTR_FN_START;
     XML_Memory_Handling_Suite memsuite = { duff_allocator, realloc, free };
     unsigned int i;
 
     /* Try several levels of allocation */
     for (i = 0; i < 10; i++) {
         allocation_count = i;
-        parser = XML_ParserCreate_MM("us-ascii", &memsuite, NULL);
+        parser = XML_ParserCreate_MM(TSTR("us-ascii"), &memsuite, NULL);
         if (parser != NULL)
             break;
     }
-    if (i == 0)
+    if (i == 0) {
+        TSTR_FN_END;
         fail("Parser ignored failing allocator");
-    else if (i == 10)
+    }
+    else if (i == 10) {
+        TSTR_FN_END;
         fail("Parser not created with allocation count 10");
+    }
+    TSTR_FN_END;
 }
 END_TEST
 
