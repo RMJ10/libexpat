@@ -2412,7 +2412,7 @@ END_TEST
 /* Test position information in handler */
 static void
 byte_character_handler(void *userData,
-                       const XML_Char *s,
+                       const XML_Char *UNUSED_P(s),
                        int len)
 {
 #ifdef XML_CONTEXT_BYTES
@@ -2429,8 +2429,6 @@ byte_character_handler(void *userData,
         fail("Character byte count incorrect");
     if (buflen != size)
         fail("Buffer length incorrect");
-    if (s != buffer + offset)
-        fail("Buffer position incorrect");
 #endif
 }
 
