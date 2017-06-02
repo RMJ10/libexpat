@@ -3550,7 +3550,8 @@ END_TEST
 /* Test robustness of XML_SetBase against a failing allocator */
 START_TEST(test_alloc_set_base)
 {
-    const XML_Char *new_base = "/local/file/name.xml";
+    TSTR_FN_START;
+    const XML_Char *new_base = TSTR("/local/file/name.xml");
     int i;
 
     for (i = 0; i < 5; i++) {
@@ -3558,10 +3559,15 @@ START_TEST(test_alloc_set_base)
         if (XML_SetBase(parser, new_base) == XML_STATUS_OK)
             break;
     }
-    if (i == 0)
+    if (i == 0) {
+        TSTR_FN_END;
         fail("Base set despite failing allocator");
-    else if (i == 5)
+    }
+    else if (i == 5) {
+        TSTR_FN_END;
         fail("Base not set with allocation count 5");
+    }
+    TSTR_FN_END;
 }
 END_TEST
 
