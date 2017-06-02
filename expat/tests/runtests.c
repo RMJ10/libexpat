@@ -3409,7 +3409,8 @@ unknown_released_encoding_handler(void *UNUSED_P(data),
                                   const XML_Char *encoding,
                                   XML_Encoding *info)
 {
-    if (!strcmp(encoding, "unsupported-encoding")) {
+    TSTR_FN_START;
+    if (!TSTR_CMP(encoding, TSTR("unsupported-encoding"))) {
         int i;
 
         for (i = 0; i < 256; i++)
@@ -3417,8 +3418,10 @@ unknown_released_encoding_handler(void *UNUSED_P(data),
         info->data = NULL;
         info->convert = NULL;
         info->release = dummy_release;
+        TSTR_FN_END;
         return XML_STATUS_OK;
     }
+    TSTR_FN_END;
     return XML_STATUS_ERROR;
 }
 
