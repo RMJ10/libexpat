@@ -3099,6 +3099,7 @@ END_TEST
  */
 START_TEST(test_misc_attribute_leak)
 {
+    TSTR_FN_START;
     const char *text = "<D xmlns:L=\"D\" l:a='' L:a=''/>";
     XML_Memory_Handling_Suite memsuite = {
         tracking_malloc,
@@ -3106,15 +3107,18 @@ START_TEST(test_misc_attribute_leak)
         tracking_free
     };
 
-    parser = XML_ParserCreate_MM("UTF-8", &memsuite, "\n");
+    parser = XML_ParserCreate_MM(TSTR("UTF-8"), &memsuite, TSTR("\n"));
     expect_failure(text, XML_ERROR_UNBOUND_PREFIX,
                    "Unbound prefixes not found");
     XML_ParserFree(parser);
     /* Prevent the teardown trying to double free */
     parser = NULL;
 
-    if (!tracking_report())
+    if (!tracking_report()) {
+        TSTR_FN_END;
         fail("Memory leak found");
+    }
+    TSTR_FN_END;
 }
 END_TEST
 
