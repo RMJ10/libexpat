@@ -3527,17 +3527,23 @@ END_TEST
 /* Test robustness of XML_SetEncoding() with a failing allocator */
 START_TEST(test_alloc_explicit_encoding)
 {
+    TSTR_FN_START;
     int i;
 
     for (i = 0; i < 5; i++) {
         allocation_count = i;
-        if (XML_SetEncoding(parser, "us-ascii") == XML_STATUS_OK)
+        if (XML_SetEncoding(parser, TSTR("us-ascii")) == XML_STATUS_OK)
             break;
     }
-    if (i == 0)
+    if (i == 0) {
+        TSTR_FN_END;
         fail("Encoding set despite failing allocator");
-    else if (i == 5)
+    }
+    else if (i == 5) {
+        TSTR_FN_END;
         fail("Encoding not set at allocation count 5");
+    }
+    TSTR_FN_END;
 }
 END_TEST
 
