@@ -1375,8 +1375,9 @@ END_TEST
 
 START_TEST(test_good_cdata_ascii)
 {
+    TSTR_FN_START;
     const char *text = "<a><![CDATA[<greeting>Hello, world!</greeting>]]></a>";
-    const char *expected = "<greeting>Hello, world!</greeting>";
+    const XML_Char *expected = TSTR("<greeting>Hello, world!</greeting>");
 
     CharData storage;
     CharData_Init(&storage);
@@ -1386,11 +1387,13 @@ START_TEST(test_good_cdata_ascii)
     if (_XML_Parse_SINGLE_BYTES(parser, text, strlen(text), XML_TRUE) == XML_STATUS_ERROR)
         xml_failure(parser);
     CharData_CheckXMLChars(&storage, expected);
+    TSTR_FN_END;
 }
 END_TEST
 
 START_TEST(test_good_cdata_utf16)
 {
+    TSTR_FN_START;
     /* Test data is:
      *   <?xml version='1.0' encoding='utf-16'?>
      *   <a><![CDATA[hello]]></a>
@@ -1401,7 +1404,7 @@ START_TEST(test_good_cdata_utf16)
                 " \0e\0n\0c\0o\0d\0i\0n\0g\0=\0'\0u\0t\0f\0-\0""1\0""6\0'"
                 "\0?\0>\0\n"
             "\0<\0a\0>\0<\0!\0[\0C\0D\0A\0T\0A\0[\0h\0e\0l\0l\0o\0]\0]\0>\0<\0/\0a\0>";
-    const char *expected = "hello";
+    const XML_Char *expected = TSTR("hello");
 
     CharData storage;
     CharData_Init(&storage);
@@ -1411,6 +1414,7 @@ START_TEST(test_good_cdata_utf16)
     if (_XML_Parse_SINGLE_BYTES(parser, text, sizeof(text) - 1, XML_TRUE) == XML_STATUS_ERROR)
         xml_failure(parser);
     CharData_CheckXMLChars(&storage, expected);
+    TSTR_FN_END;
 }
 END_TEST
 
