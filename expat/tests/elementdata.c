@@ -70,7 +70,7 @@ int ElementData_CheckData(ElementData *storage,
     }
     for (i = 0; i < storage->count; i++) {
         ElementDataItem *element = &storage->elements[i];
-        ElementResultItem *result = &expected->elements[i];
+        const ElementResultItem *result = &expected->elements[i];
         if (TSTR_CMP(element->name, TSTR(result->name)) != 0) {
             sprintf(buffer, "wrong element: got %s, expected %s\n",
                     TSTR2CHAR(element->name), result->name);
