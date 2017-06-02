@@ -1787,14 +1787,14 @@ END_TEST
 
 /* Test attribute counts, indexing, etc */
 typedef struct attrInfo {
-    const char *name;
-    const char *value;
+    const XML_Char *name;
+    const XML_Char *value;
 } AttrInfo;
 
 typedef struct elementInfo {
-    const char *name;
+    const XML_Char *name;
     int attr_count;
-    const char *id_name;
+    const XML_Char *id_name;
     AttrInfo *attributes;
 } ElementInfo;
 
@@ -1808,7 +1808,7 @@ counting_start_element_handler(void *userData,
     int count, id, i;
 
     while (info->name != NULL) {
-        if (!strcmp(name, info->name))
+        if (!TSTR_CMP(name, info->name))
             break;
         info++;
     }
@@ -1825,14 +1825,14 @@ counting_start_element_handler(void *userData,
         fail("ID not present");
         return;
     }
-    if (id != -1 && strcmp(atts[id], info->id_name)) {
+    if (id != -1 && TSTR_CMP(atts[id], info->id_name)) {
         fail("ID does not have the correct name");
         return;
     }
     for (i = 0; i < info->attr_count; i++) {
         attr = info->attributes;
         while (attr->name != NULL) {
-            if (!strcmp(atts[0], attr->name))
+            if (!TSTR_CMP(atts[0], attr->name))
                 break;
             attr++;
         }
@@ -1840,7 +1840,7 @@ counting_start_element_handler(void *userData,
             fail("Attribute not recognised");
             return;
         }
-        if (strcmp(atts[1], attr->value)) {
+        if (TSTR_CMP(atts[1], attr->value)) {
             fail("Attribute has wrong value");
             return;
         }
@@ -1850,6 +1850,7 @@ counting_start_element_handler(void *userData,
 
 START_TEST(test_attributes)
 {
+    TSTR_FN_START;
     const char *text =
         "<!DOCTYPE doc [\n"
         "<!ELEMENT doc (tag)>\n"
@@ -1859,18 +1860,18 @@ START_TEST(test_attributes)
         "<tag c='3'/>"
         "</doc>";
     AttrInfo doc_info[] = {
-        { "a",  "1" },
-        { "b",  "2" },
-        { "id", "one" },
+        { TSTR("a"),  TSTR("1") },
+        { TSTR("b"),  TSTR("2") },
+        { TSTR("id"), TSTR("one") },
         { NULL, NULL }
     };
     AttrInfo tag_info[] = {
-        { "c",  "3" },
+        { TSTR("c"),  TSTR("3") },
         { NULL, NULL }
     };
     ElementInfo info[] = {
-        { "doc", 3, "id", NULL },
-        { "tag", 1, NULL, NULL },
+        { TSTR("doc"), 3, TSTR("id"), NULL },
+        { TSTR("tag"), 1, NULL, NULL },
         { NULL, 0, NULL, NULL }
     };
     info[0].attributes = doc_info;
@@ -1880,6 +1881,7 @@ START_TEST(test_attributes)
     XML_SetUserData(parser, info);
     if (_XML_Parse_SINGLE_BYTES(parser, text, strlen(text), XML_TRUE) == XML_STATUS_ERROR)
         xml_failure(parser);
+    TSTR_FN_END;
 }
 END_TEST
 
@@ -2066,6 +2068,7 @@ END_TEST
 /* Test setting an explicit encoding */
 START_TEST(test_explicit_encoding)
 {
+    
     const char *text1 = "<doc>Hello ";
     const char *text2 = " World</doc>";
 
