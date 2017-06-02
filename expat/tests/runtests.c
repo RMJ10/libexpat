@@ -3464,6 +3464,7 @@ END_TEST
  */
 START_TEST(test_alloc_dtd_default_handling)
 {
+    TSTR_FN_START;
     const char *text =
         "<!DOCTYPE doc [\n"
         "<!ENTITY e SYSTEM 'http://xml.libexpat.org/e'>\n"
@@ -3473,7 +3474,7 @@ START_TEST(test_alloc_dtd_default_handling)
         "<?pi in dtd?>\n"
         "<!--comment in dtd-->\n"
         "]><doc/>";
-    const char *expected = "\n\n\n\n\n\n\n<doc/>";
+    const XML_Char *expected = TSTR("\n\n\n\n\n\n\n<doc/>");
     CharData storage;
     int i;
     int repeat = 0;
@@ -3511,12 +3512,15 @@ START_TEST(test_alloc_dtd_default_handling)
         XML_ParserReset(parser, NULL);
     }
     if (i == 0) {
+        TSTR_FN_END;
         fail("Default DTD parsed despite allocation failures");
     } else if (i == 10) {
+        TSTR_FN_END;
         fail("Default DTD not parsed with alloc count 10");
     } else {
         CharData_CheckXMLChars(&storage, expected);
     }
+    TSTR_FN_END;
 }
 END_TEST
 
