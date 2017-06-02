@@ -2478,17 +2478,22 @@ static void XMLCALL
 triplet_start_checker(void *userData, const XML_Char *name,
                       const XML_Char **atts)
 {
-    char **elemstr = (char **)userData;
+    TSTR_FN_START;
+    XML_Char **elemstr = (XML_Char **)userData;
     char buffer[1024];
-    if (strcmp(elemstr[0], name) != 0) {
-        sprintf(buffer, "unexpected start string: '%s'", name);
+    if (TSTR_CMP(elemstr[0], name) != 0) {
+        sprintf(buffer, "unexpected start string: '%s'", TSTR2CHAR(name));
+        TSTR_FN_END;
         fail(buffer);
     }
-    if (strcmp(elemstr[1], atts[0]) != 0) {
-        sprintf(buffer, "unexpected attribute string: '%s'", atts[0]);
+    if (TSTR_CMP(elemstr[1], atts[0]) != 0) {
+        sprintf(buffer, "unexpected attribute string: '%s'",
+                TSTR2CHAR(atts[0]));
+        TSTR_FN_END;
         fail(buffer);
     }
     triplet_count++;
+    TSTR_FN_END;
 }
 
 /* Check that the element name passed to the end-element handler matches
@@ -2498,24 +2503,28 @@ triplet_start_checker(void *userData, const XML_Char *name,
 static void XMLCALL
 triplet_end_checker(void *userData, const XML_Char *name)
 {
-    char **elemstr = (char **)userData;
-    if (strcmp(elemstr[0], name) != 0) {
+    TSTR_FN_START;
+    XML_Char **elemstr = (XML_Char **)userData;
+    if (TSTR_CMP(elemstr[0], name) != 0) {
         char buffer[1024];
-        sprintf(buffer, "unexpected end string: '%s'", name);
+        sprintf(buffer, "unexpected end string: '%s'", TSTR2CHAR(name));
+        TSTR_FN_END;
         fail(buffer);
     }
     triplet_count++;
+    TSTR_FN_END;
 }
 
 START_TEST(test_return_ns_triplet)
 {
+    TSTR_FN_START;
     const char *text =
         "<foo:e xmlns:foo='http://expat.sf.net/' bar:a='12'\n"
         "       xmlns:bar='http://expat.sf.net/'>";
     const char *epilog = "</foo:e>";
-    const char *elemstr[] = {
-        "http://expat.sf.net/ e foo",
-        "http://expat.sf.net/ a bar"
+    const XML_Char *elemstr[] = {
+        TSTR("http://expat.sf.net/ e foo"),
+        TSTR("http://expat.sf.net/ a bar")
     };
     XML_SetReturnNSTriplet(parser, XML_TRUE);
     XML_SetUserData(parser, elemstr);
@@ -2526,17 +2535,26 @@ START_TEST(test_return_ns_triplet)
                                 dummy_end_namespace_decl_handler);
     triplet_count = 0;
     if (_XML_Parse_SINGLE_BYTES(parser, text, strlen(text),
-                                XML_FALSE) == XML_STATUS_ERROR)
+                                XML_FALSE) == XML_STATUS_ERROR) {
+        TSTR_FN_END;
         xml_failure(parser);
-    if (triplet_count != 1)
+    }
+    if (triplet_count != 1) {
+        TSTR_FN_END;
         fail("triplet_start_checker not invoked");
+    }
     /* Check that unsetting "return triplets" fails while still parsing */
     XML_SetReturnNSTriplet(parser, XML_FALSE);
     if (_XML_Parse_SINGLE_BYTES(parser, epilog, strlen(epilog),
-                                XML_TRUE) == XML_STATUS_ERROR)
+                                XML_TRUE) == XML_STATUS_ERROR) {
+        TSTR_FN_END;
         xml_failure(parser);
-    if (triplet_count != 2)
+    }
+    if (triplet_count != 2) {
+        TSTR_FN_END;
         fail("triplet_end_checker not invoked");
+    }
+    TSTR_FN_END;
 }
 END_TEST
 
@@ -2754,6 +2772,7 @@ END_TEST
 /* Regression test #4 for SF bug #673791. */
 START_TEST(test_ns_prefix_with_empty_uri_4)
 {
+    TSTR_FN_START;
     const char *text =
         "<!DOCTYPE doc [\n"
         "  <!ELEMENT prefix:doc EMPTY>\n"
@@ -2764,14 +2783,17 @@ START_TEST(test_ns_prefix_with_empty_uri_4)
     /* Packaged info expected by the end element handler;
        the weird structuring lets us re-use the triplet_end_checker()
        function also used for another test. */
-    const char *elemstr[] = {
-        "http://xml.libexpat.org/ doc prefix"
+    const XML_Char *elemstr[] = {
+        TSTR("http://xml.libexpat.org/ doc prefix")
     };
     XML_SetReturnNSTriplet(parser, XML_TRUE);
     XML_SetUserData(parser, elemstr);
     XML_SetEndElementHandler(parser, triplet_end_checker);
-    if (_XML_Parse_SINGLE_BYTES(parser, text, strlen(text), XML_TRUE) == XML_STATUS_ERROR)
+    if (_XML_Parse_SINGLE_BYTES(parser, text, strlen(text), XML_TRUE) == XML_STATUS_ERROR) {
+        TSTR_FN_END;
         xml_failure(parser);
+    }
+    TSTR_FN_END;
 }
 END_TEST
 
