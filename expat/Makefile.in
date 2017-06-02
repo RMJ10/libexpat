@@ -57,8 +57,7 @@ clean:
 	cd lib && rm -f $(LIBRARY) *.@OBJEXT@ *.lo && rm -rf .libs _libs
 	cd xmlwf && rm -f xmlwf *.@OBJEXT@ *.lo && rm -rf .libs _libs
 	cd examples && rm -f elements outline *.@OBJEXT@ *.lo && rm -rf .libs _libs
-	cd tests && rm -rf .libs runtests runtests.@OBJEXT@ runtestspp runtestspp.@OBJEXT@
-	cd tests && rm -f chardata.@OBJEXT@ memcheck.@OBJEXT@ minicheck.@OBJEXT@
+	cd tests && rm -rf .libs runtests runtestspp *.@OBJEXT@
 	rm -rf .libs libexpat.la
 	rm -f examples/core tests/core xmlwf/core
 
@@ -163,17 +162,18 @@ examples/outline.@OBJEXT@: examples/outline.c
 examples/outline: examples/outline.@OBJEXT@ $(LIBRARY)
 	$(LINK_EXE) examples/outline.@OBJEXT@ $(LIBRARY)
 
+TEST_OBJS = tests/chardata.@OBJEXT@ tests/minicheck.@OBJEXT@ tests/memcheck.@OBJEXT@ tests/unicode.@OBJEXT@ tests/elementdata.@OBJEXT@
 tests/chardata.@OBJEXT@: tests/chardata.c tests/chardata.h
 tests/minicheck.@OBJEXT@: tests/minicheck.c tests/minicheck.h
 tests/memcheck.@OBJEXT@: tests/memcheck.c tests/memcheck.h
 tests/unicode.@OBJEXT@: tests/unicode.c tests/unicode.h tests/minicheck.h
 tests/elementdata.@OBJECT@: tests/elementdata.c tests/elementdata.h tests/minicheck.h tests/unicode.h
 tests/runtests.@OBJEXT@: tests/runtests.c tests/chardata.h tests/memcheck.h tests/unicode.h tests/elementdata.h
-tests/runtests: tests/runtests.@OBJEXT@ tests/chardata.@OBJEXT@ tests/minicheck.@OBJEXT@ tests/memcheck.@OBJEXT@ tests/unicode.@OBJEXT@ tests/elementdata.@OBJEXT@ $(LIBRARY)
-	$(LINK_EXE) tests/runtests.@OBJEXT@ tests/chardata.@OBJEXT@ tests/minicheck.@OBJEXT@ tests/memcheck.@OBJEXT@ tests/unicode.@OBJEXT@ tests/elementdata.@OBJEXT@ $(LIBRARY)
+tests/runtests: tests/runtests.@OBJEXT@ $(TEST_OBJS) $(LIBRARY)
+	$(LINK_EXE) tests/runtests.@OBJEXT@ $(TEST_OBJS) $(LIBRARY)
 tests/runtestspp.@OBJEXT@: tests/runtestspp.cpp tests/runtests.c tests/chardata.h tests/memcheck.h tests/unicode.h tests/elementdata.h
-tests/runtestspp: tests/runtestspp.@OBJEXT@ tests/chardata.@OBJEXT@ tests/minicheck.@OBJEXT@ tests/memcheck.@OBJEXT@ tests/unicode.@OBJEXT@ tests/elementdata.@OBJEXT@ $(LIBRARY)
-	$(LINK_CXX_EXE) tests/runtestspp.@OBJEXT@ tests/chardata.@OBJEXT@ tests/minicheck.@OBJEXT@ tests/memcheck.@OBJEXT@ tests/unicode.@OBJEXT@ tests/elementdata.@OBJEXT@ $(LIBRARY)
+tests/runtestspp: tests/runtestspp.@OBJEXT@ $(TEST_OBJS) $(LIBRARY)
+	$(LINK_CXX_EXE) tests/runtestspp.@OBJEXT@ $(TEST_OBJS) $(LIBRARY)
 
 tests/benchmark/benchmark.@OBJEXT@: tests/benchmark/benchmark.c
 tests/benchmark/benchmark: tests/benchmark/benchmark.@OBJEXT@ $(LIBRARY)
