@@ -38,16 +38,18 @@ void
 ElementData_AddData(ElementData *storage, const XML_Char *name,
                     int line, int column, int is_end)
 {
-    int len = xmlstrlen(name) + 1;
+    int len;
     ElementDataItem *element = &storage->elements[storage->count];
 
     assert(storage->count < MAX_ELEMENTS);
-    assert(len < MAX_ELEMENT_NAME_LEN);
 
     if (name == NULL)
         element->name[0] = 0;
-    else
+    else {
+        len = xmlstrlen(name) + 1;
+        assert(len < MAX_ELEMENT_NAME_LEN);
         memcpy(element->name, name, len * sizeof(XML_Char));
+    }
     element->line = line;
     element->column = column;
     element->is_end = is_end;
