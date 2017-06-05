@@ -13,7 +13,11 @@ extern "C" {
 
 typedef struct tstring_s {
     struct tstring_s *next;
-    XML_Char str[];
+    /* The C90 standard doesn't allow flexible arrays (type var[];), so
+     * we use the old dodge of declaring a single byte but allocating far
+     * more.  This will probably not play well with bounds checkers.
+     */
+    XML_Char str[1];
 } TString;
 
 extern const XML_Char *tstring_create(TString **phead, const char *s);
