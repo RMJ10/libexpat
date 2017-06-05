@@ -16,6 +16,9 @@
 
 #define BAD_CODEPOINT ((unsigned int)(-1))
 
+static int surrogate_pair_started = 0;
+static XML_Char surrogate_high;
+
 static unsigned int
 utf16_to_codepoint(const XML_Char hi, const XML_Char lo)
 {
@@ -263,6 +266,33 @@ tstring_putc(XML_Char ch, FILE *fp)
 {
     XML_Char input[2];
     char buffer[5];
+
+    if (surrogate_pair_started) {
+        surrogate_pair_started = 0;
+        if (ch >= 0xdc00 && ch <= 0xdfff) {
+            /* Second of a surrogate pair */
+            input[0] = surrogate_high;
+            input[1] = ch;
+            utf16_to_utf8(input, buffer);
+            fputs(buffer, fp);
+            return;
+        }
+        /* Else this is not a surrogate pair, and the previous
+         * 16-bit character is in error somehow.
+         */
+        input[0] = surrogate_high;
+        input[1] = 0;
+        utf16_to_utf8(input, buffer);
+        fputs(buffer, fp);
+        /* DO NOT return here, we must process the new character */
+    }
+
+    if (ch >= 0xd800 && ch <= 0xdbff) {
+        /* This is (probably) the start of a surrogate pair */
+        surrogate_pair_started = 1;
+        surrogate_high = ch;
+        return;
+    }
 
     input[0] = ch;
     input[1] = 0;
