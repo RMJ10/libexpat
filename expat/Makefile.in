@@ -146,7 +146,7 @@ lib/xmltok.lo: lib/xmltok.c lib/xmltok_impl.c lib/xmltok_ns.c \
 	$(top_builddir)/expat_config.h lib/expat_external.h lib/internal.h
 
 
-XMLWF_OBJS = xmlwf/xmlwf.@OBJEXT@ xmlwf/xmlfile.@OBJEXT@ xmlwf/codepage.@OBJEXT@ xmlwf/@FILEMAP@.@OBJEXT@ xmlwf/u16str.@OBJEXT@ xmlwf/wstring.@OBJEXT@
+XMLWF_OBJS = xmlwf/xmlwf.@OBJEXT@ xmlwf/xmlfile.@OBJEXT@ xmlwf/codepage.@OBJEXT@ xmlwf/@FILEMAP@.@OBJEXT@ xmlwf/u16str.@OBJEXT@
 xmlwf/xmlwf.@OBJEXT@: xmlwf/xmlwf.c xmlwf/xmltchar.h
 xmlwf/xmlfile.@OBJEXT@: xmlwf/xmlfile.c xmlwf/xmltchar.h
 xmlwf/codepage.@OBJEXT@: xmlwf/codepage.c
