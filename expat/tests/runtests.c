@@ -1859,23 +1859,41 @@ START_TEST(test_attributes)
         "<doc a='1' id='one' b='2'>"
         "<tag c='3'/>"
         "</doc>";
-    AttrInfo doc_info[] = {
-        { TSTR("a"),  TSTR("1") },
-        { TSTR("b"),  TSTR("2") },
-        { TSTR("id"), TSTR("one") },
-        { NULL, NULL }
-    };
-    AttrInfo tag_info[] = {
-        { TSTR("c"),  TSTR("3") },
-        { NULL, NULL }
-    };
-    ElementInfo info[] = {
-        { TSTR("doc"), 3, TSTR("id"), NULL },
-        { TSTR("tag"), 1, NULL, NULL },
-        { NULL, 0, NULL, NULL }
-    };
+    AttrInfo doc_info[4];
+    AttrInfo tag_info[2];
+    ElementInfo info[3];
+
+    /* Sadly these initial values cannot be put in an initializer
+     * because if XML_UNICODE is defined but XML_UNICODE_WCHAR_T is
+     * not, the TSTRs are actually in dynamically allocated memory
+     * rather than being compile-time constants.
+     */
+    doc_info[0].name = TSTR("a");
+    doc_info[0].value = TSTR("1");
+    doc_info[1].name = TSTR("b");
+    doc_info[1].value = TSTR("2");
+    doc_info[2].name = TSTR("id");
+    doc_info[2].value = TSTR("one");
+    doc_info[3].name = NULL;
+    doc_info[3].value = NULL;
+
+    tag_info[0].name = TSTR("c");
+    tag_info[0].value = TSTR("3");
+    tag_info[1].name = NULL;
+    tag_info[1].value = NULL;
+
+    info[0].name = TSTR("doc");
+    info[0].attr_count = 3;
+    info[0].id_name = TSTR("id");
     info[0].attributes = doc_info;
+    info[1].name = TSTR("tag");
+    info[1].attr_count = 1;
+    info[1].id_name = NULL;
     info[1].attributes = tag_info;
+    info[2].name = NULL;
+    info[2].attr_count = 0;
+    info[2].id_name = NULL;
+    info[2].attributes = NULL;
 
     XML_SetStartElementHandler(parser, counting_start_element_handler);
     XML_SetUserData(parser, info);
@@ -2522,10 +2540,14 @@ START_TEST(test_return_ns_triplet)
         "<foo:e xmlns:foo='http://expat.sf.net/' bar:a='12'\n"
         "       xmlns:bar='http://expat.sf.net/'>";
     const char *epilog = "</foo:e>";
-    const XML_Char *elemstr[] = {
-        TSTR("http://expat.sf.net/ e foo"),
-        TSTR("http://expat.sf.net/ a bar")
-    };
+    const XML_Char *elemstr[2];
+
+    /* Unfortunately these cannot be done in an initializer because
+     * TSTRs can be dynamically allocated rather than constants in
+     * some builds.
+     */
+    elemstr[0] = TSTR("http://expat.sf.net/ e foo");
+    elemstr[1] = TSTR("http://expat.sf.net/ a bar");
     XML_SetReturnNSTriplet(parser, XML_TRUE);
     XML_SetUserData(parser, elemstr);
     XML_SetElementHandler(parser, triplet_start_checker,
@@ -2791,9 +2813,12 @@ START_TEST(test_ns_prefix_with_empty_uri_4)
     /* Packaged info expected by the end element handler;
        the weird structuring lets us re-use the triplet_end_checker()
        function also used for another test. */
-    const XML_Char *elemstr[] = {
-        TSTR("http://xml.libexpat.org/ doc prefix")
-    };
+    const XML_Char *elemstr[1];
+
+    /* Unfortunately this cannot be an initializer because TSTRs can
+     * be dynamically allocated instead of constants in some builds.
+     */
+    elemstr[0] = TSTR("http://xml.libexpat.org/ doc prefix");
     XML_SetReturnNSTriplet(parser, XML_TRUE);
     XML_SetUserData(parser, elemstr);
     XML_SetEndElementHandler(parser, triplet_end_checker);
