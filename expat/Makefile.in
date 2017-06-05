@@ -147,10 +147,10 @@ lib/xmltok.lo: lib/xmltok.c lib/xmltok_impl.c lib/xmltok_ns.c \
 
 
 XMLWF_OBJS = xmlwf/xmlwf.@OBJEXT@ xmlwf/xmlfile.@OBJEXT@ xmlwf/codepage.@OBJEXT@ xmlwf/@FILEMAP@.@OBJEXT@ xmlwf/u16str.@OBJEXT@ xmlwf/wstring.@OBJEXT@
-xmlwf/xmlwf.@OBJEXT@: xmlwf/xmlwf.c
-xmlwf/xmlfile.@OBJEXT@: xmlwf/xmlfile.c
+xmlwf/xmlwf.@OBJEXT@: xmlwf/xmlwf.c xmlwf/xmltchar.h
+xmlwf/xmlfile.@OBJEXT@: xmlwf/xmlfile.c xmlwf/xmltchar.h
 xmlwf/codepage.@OBJEXT@: xmlwf/codepage.c
-xmlwf/@FILEMAP@.@OBJEXT@: xmlwf/@FILEMAP@.c xmlwf/filemap.h
+xmlwf/@FILEMAP@.@OBJEXT@: xmlwf/@FILEMAP@.c xmlwf/filemap.h xmlwf/xmltchar.h
 xmlwf/xmlwf@EXEEXT@: $(XMLWF_OBJS) $(LIBRARY)
 	$(LINK_EXE) $(XMLWF_OBJS) $(LIBRARY)
 
