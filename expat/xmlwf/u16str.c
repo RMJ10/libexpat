@@ -2,8 +2,6 @@
    See the file COPYING for copying permission.
 */
 
-#if defined(XML_UNICODE) && !defined(XML_UNICODE_WCHAR_T)
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
@@ -13,9 +11,11 @@
 #include <fcntl.h>
 #include "expat.h"
 #include "u16str.h"
+#include "internal.h" /* for UNUSED_P */
 
 #define BAD_CODEPOINT ((unsigned int)(-1))
 
+#if defined(XML_UNICODE) && !defined (XML_UNICODE_WCHAR_T)
 static int surrogate_pair_started = 0;
 static XML_Char surrogate_high;
 
@@ -112,8 +112,10 @@ utf16_dup_as_utf8(const XML_Char *s)
     *d = '\0';
     return result;
 }
+#endif /* XML_UNICODE && !XML_UNICODE_WCHAR_T */
 
 
+#if defined(XML_UNICODE) && !defined (XML_UNICODE_WCHAR_T)
 const XML_Char *
 tstring_create(TString **phead, const char *s)
 {
@@ -133,7 +135,15 @@ tstring_create(TString **phead, const char *s)
     *phead = new;
     return new->str;
 }
+#else
+const XML_Char *
+tstring_create(TString **UNUSED_P(phead), const char *UNUSED_P(s))
+{
+    return NULL;
+}
+#endif
 
+#if defined(XML_UNICODE) && !defined (XML_UNICODE_WCHAR_T)
 void
 tstring_dispose(TString *head)
 {
@@ -143,8 +153,15 @@ tstring_dispose(TString *head)
         head = next;
     }
 }
+#else
+void
+tstring_dispose(TString *UNUSED_P(head))
+{
+}
+#endif
 
 /* This is a very limited reimplementation of fprintf */
+#if defined(XML_UNICODE) && !defined (XML_UNICODE_WCHAR_T)
 void
 tstring_fprintf(FILE *fp, const XML_Char *format, ...)
 {
@@ -247,7 +264,14 @@ tstring_fprintf(FILE *fp, const XML_Char *format, ...)
 
     va_end(args);
 }
+#else /* defined(XML_UNICODE) && !defined (XML_UNICODE_WCHAR_T) */
+void
+tstring_fprintf(FILE *UNUSED_P(fp), const XML_Char *UNUSED_P(format), ...)
+{
+}
+#endif /* defined(XML_UNICODE) && !defined (XML_UNICODE_WCHAR_T) */
 
+#if defined(XML_UNICODE) && !defined (XML_UNICODE_WCHAR_T)
 void
 tstring_fputs(const XML_Char *s, FILE *fp)
 {
@@ -260,7 +284,14 @@ tstring_fputs(const XML_Char *s, FILE *fp)
         s += incr;
     }
 }
+#else
+void
+tstring_fputs(const XML_Char *UNUSED_P(s), FILE *UNUSED_P(fp))
+{
+}
+#endif
 
+#if defined(XML_UNICODE) && !defined (XML_UNICODE_WCHAR_T)
 void
 tstring_putc(XML_Char ch, FILE *fp)
 {
@@ -302,7 +333,14 @@ tstring_putc(XML_Char ch, FILE *fp)
     else
         fputs(buffer, fp);
 }
+#else
+void
+tstring_putc(XML_Char UNUSED_P(ch), FILE *UNUSED_P(fp))
+{
+}
+#endif
 
+#if defined(XML_UNICODE) && !defined (XML_UNICODE_WCHAR_T)
 int
 tstring_cmp(const XML_Char *s1, const XML_Char *s2)
 {
@@ -320,7 +358,15 @@ tstring_cmp(const XML_Char *s1, const XML_Char *s2)
         return -1;
     return 0;
 }
+#else
+int
+tstring_cmp(const XML_Char *UNUSED_P(s1), const XML_Char *UNUSED_P(s2))
+{
+    return -1;
+}
+#endif
 
+#if defined(XML_UNICODE) && !defined (XML_UNICODE_WCHAR_T)
 void
 tstring_cpy(XML_Char *d, const XML_Char *s)
 {
@@ -328,7 +374,14 @@ tstring_cpy(XML_Char *d, const XML_Char *s)
         *d++ = *s++;
     *d = 0;
 }
+#else
+void
+tstring_cpy(XML_Char *UNUSED_P(d), const XML_Char *UNUSED_P(s))
+{
+}
+#endif
 
+#if defined(XML_UNICODE) && !defined (XML_UNICODE_WCHAR_T)
 void
 tstring_cat(XML_Char *d, const XML_Char *s)
 {
@@ -338,7 +391,14 @@ tstring_cat(XML_Char *d, const XML_Char *s)
         *d++ = *s++;
     *d = 0;
 }
+#else
+void
+tstring_cat(XML_Char *UNUSED_P(d), const XML_Char *UNUSED_P(s))
+{
+}
+#endif
 
+#if defined(XML_UNICODE) && !defined (XML_UNICODE_WCHAR_T)
 XML_Char *
 tstring_chr(const XML_Char *s, int c)
 {
@@ -347,7 +407,15 @@ tstring_chr(const XML_Char *s, int c)
             return (XML_Char *)s-1;
     return NULL;
 }
+#else
+XML_Char *
+tstring_chr(const XML_Char *UNUSED_P(s), int UNUSED_P(c))
+{
+    return NULL;
+}
+#endif
 
+#if defined(XML_UNICODE) && !defined (XML_UNICODE_WCHAR_T)
 XML_Char *
 tstring_rchr(const XML_Char *s, int c)
 {
@@ -358,7 +426,15 @@ tstring_rchr(const XML_Char *s, int c)
             result = s-1;
     return (XML_Char *)result;
 }
+#else
+XML_Char *
+tstring_rchr(const XML_Char *UNUSED_P(s), int UNUSED_P(c))
+{
+    return NULL;
+}
+#endif
 
+#if defined(XML_UNICODE) && !defined (XML_UNICODE_WCHAR_T)
 int
 tstring_len(const XML_Char *s)
 {
@@ -369,7 +445,15 @@ tstring_len(const XML_Char *s)
     }
     return len;
 }
+#else
+int
+tstring_len(const XML_Char *UNUSED_P(s))
+{
+    return 0;
+}
+#endif
 
+#if defined(XML_UNICODE) && !defined (XML_UNICODE_WCHAR_T)
 FILE *
 tstring_fopen(const XML_Char *filename, XML_Char *mode)
 {
@@ -388,7 +472,15 @@ tstring_fopen(const XML_Char *filename, XML_Char *mode)
     free(utf8_mode);
     return fp;
 }
+#else
+FILE *
+tstring_fopen(const XML_Char *UNUSED_P(filename), XML_Char *UNUSED_P(mode))
+{
+    return NULL;
+}
+#endif
 
+#if defined(XML_UNICODE) && !defined (XML_UNICODE_WCHAR_T)
 int
 tstring_open(const XML_Char *filename, int flags)
 {
@@ -401,7 +493,15 @@ tstring_open(const XML_Char *filename, int flags)
     free(utf8_filename);
     return fd;
 }
+#else
+int
+tstring_open(const XML_Char *UNUSED_P(filename), int UNUSED_P(flags))
+{
+    return -1;
+}
+#endif
 
+#if defined(XML_UNICODE) && !defined (XML_UNICODE_WCHAR_T)
 void
 tstring_perror(const XML_Char *s)
 {
@@ -414,5 +514,9 @@ tstring_perror(const XML_Char *s)
         free(utf8);
     }
 }
-
-#endif /* defined(XML_UNICODE) && !defined(XML_UNICODE_WCHAR_T) */
+#else
+void
+tstring_perror(const XML_Char *UNUSED_P(s))
+{
+}
+#endif

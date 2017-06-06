@@ -5,8 +5,6 @@
 #ifndef XMLWF_U16STR_H_INCLUDED
 #define XMLWF_U16STR_H_INCLUDED
 
-#if defined(XML_UNICODE) && !defined (XML_UNICODE_WCHAR_T)
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -39,5 +37,4 @@ extern void tstring_perror(const XML_Char *s);
 }
 #endif
 
-#endif /* XML_UNICODE && !XML_UNICODE_WCHAR_T */
 #endif /* XMLWF_U16STR_H_INCLUDED */

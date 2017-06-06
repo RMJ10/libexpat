@@ -62,9 +62,10 @@ processStream(const XML_Char *filename, XML_Parser parser);
 static void
 reportError(XML_Parser parser, const XML_Char *filename)
 {
-  T_FN_START;
   enum XML_Error code = XML_GetErrorCode(parser);
   const XML_LChar *message = XML_ErrorString(code);
+  T_FN_START;
+
   if (message)
     ftprintf(stdout, TSTR("%s:%" XML_FMT_INT_MOD "u:%" XML_FMT_INT_MOD "u: %s\n"),
              filename,
@@ -138,13 +139,14 @@ externalEntityRefFilemap(XML_Parser parser,
                          const XML_Char *systemId,
                          const XML_Char *UNUSED_P(publicId))
 {
-  T_FN_START;
   int result;
   XML_Char *s;
   const XML_Char *filename;
   XML_Parser entParser = XML_ExternalEntityParserCreate(parser, context, 0);
   int filemapRes;
   PROCESS_ARGS args;
+  T_FN_START;
+
   args.retPtr = &result;
   args.parser = entParser;
   filename = resolveSystemId(base, systemId, &s);
@@ -169,9 +171,9 @@ externalEntityRefFilemap(XML_Parser parser,
 static int
 processStream(const XML_Char *filename, XML_Parser parser)
 {
-  T_FN_START;
   /* passing NULL for filename means read intput from stdin */
   int fd = 0;   /* 0 is the fileno for stdin */
+  T_FN_START;
 
   if (filename != NULL) {
     fd = topen(filename, O_BINARY|O_RDONLY);
@@ -241,8 +243,8 @@ XML_ProcessFile(XML_Parser parser,
                 const XML_Char *filename,
                 unsigned flags)
 {
-  T_FN_START;
   int result;
+  T_FN_START;
 
   if (!XML_SetBase(parser, filename)) {
     ftprintf(stderr, TSTR("%s: out of memory"), filename);

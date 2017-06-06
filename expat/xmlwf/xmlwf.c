@@ -28,8 +28,9 @@
 static void XMLCALL
 characterData(void *userData, const XML_Char *s, int len)
 {
-  T_FN_START;
   FILE *fp = (FILE *)userData;
+  T_FN_START;
+
   for (; len > 0; --len, ++s) {
     switch (*s) {
     case TCH('&'):
@@ -171,12 +172,13 @@ nsattcmp(const void *p1, const void *p2)
 static void XMLCALL
 startElementNS(void *userData, const XML_Char *name, const XML_Char **atts)
 {
-  T_FN_START;
   int nAtts;
   int nsi;
   const XML_Char **p;
   FILE *fp = (FILE *)userData;
   const XML_Char *sep;
+  T_FN_START;
+
   puttc(TCH('<'), fp);
 
   sep = tcsrchr(name, NSSEP);
@@ -222,9 +224,10 @@ startElementNS(void *userData, const XML_Char *name, const XML_Char **atts)
 static void XMLCALL
 endElementNS(void *userData, const XML_Char *name)
 {
-  T_FN_START;
   FILE *fp = (FILE *)userData;
   const XML_Char *sep;
+  T_FN_START;
+
   puttc(TCH('<'), fp);
   puttc(TCH('/'), fp);
   sep = tcsrchr(name, NSSEP);
@@ -314,8 +317,9 @@ markup(void *userData, const XML_Char *s, int len)
 static void
 metaLocation(XML_Parser parser)
 {
-  T_FN_START;
   const XML_Char *uri = XML_GetBase(parser);
+  T_FN_START;
+
   if (uri)
     ftprintf((FILE *)XML_GetUserData(parser), TSTR(" uri=\"%s\""), uri);
   ftprintf((FILE *)XML_GetUserData(parser),
@@ -348,13 +352,14 @@ static void XMLCALL
 metaStartElement(void *userData, const XML_Char *name,
                  const XML_Char **atts)
 {
-  T_FN_START;
   XML_Parser parser = (XML_Parser) userData;
   FILE *fp = (FILE *)XML_GetUserData(parser);
   const XML_Char **specifiedAttsEnd
     = atts + XML_GetSpecifiedAttributeCount(parser);
   const XML_Char **idAttPtr;
   int idAttIndex = XML_GetIdAttributeIndex(parser);
+  T_FN_START;
+
   if (idAttIndex < 0)
     idAttPtr = 0;
   else
@@ -384,9 +389,10 @@ metaStartElement(void *userData, const XML_Char *name,
 static void XMLCALL
 metaEndElement(void *userData, const XML_Char *name)
 {
-  T_FN_START;
   XML_Parser parser = (XML_Parser) userData;
   FILE *fp = (FILE *)XML_GetUserData(parser);
+  T_FN_START;
+
   ftprintf(fp, TSTR("<endtag name=\"%s\""), name);
   metaLocation(parser);
   fputts(TSTR("/>\n"), fp);
@@ -397,9 +403,10 @@ static void XMLCALL
 metaProcessingInstruction(void *userData, const XML_Char *target,
                           const XML_Char *data)
 {
-  T_FN_START;
   XML_Parser parser = (XML_Parser) userData;
   FILE *fp = (FILE *)XML_GetUserData(parser);
+  T_FN_START;
+
   ftprintf(fp, TSTR("<pi target=\"%s\" data=\""), target);
   characterData(fp, data, (int)tcslen(data));
   puttc(TCH('"'), fp);
@@ -411,9 +418,10 @@ metaProcessingInstruction(void *userData, const XML_Char *target,
 static void XMLCALL
 metaComment(void *userData, const XML_Char *data)
 {
-  T_FN_START;
   XML_Parser parser = (XML_Parser) userData;
   FILE *fp = (FILE *)XML_GetUserData(parser);
+  T_FN_START;
+
   fputts(TSTR("<comment data=\""), fp);
   characterData(fp, data, (int)tcslen(data));
   puttc(TCH('"'), fp);
@@ -425,9 +433,10 @@ metaComment(void *userData, const XML_Char *data)
 static void XMLCALL
 metaStartCdataSection(void *userData)
 {
-  T_FN_START;
   XML_Parser parser = (XML_Parser) userData;
   FILE *fp = (FILE *)XML_GetUserData(parser);
+  T_FN_START;
+
   fputts(TSTR("<startcdata"), fp);
   metaLocation(parser);
   fputts(TSTR("/>\n"), fp);
@@ -437,9 +446,10 @@ metaStartCdataSection(void *userData)
 static void XMLCALL
 metaEndCdataSection(void *userData)
 {
-  T_FN_START;
   XML_Parser parser = (XML_Parser) userData;
   FILE *fp = (FILE *)XML_GetUserData(parser);
+  T_FN_START;
+
   fputts(TSTR("<endcdata"), fp);
   metaLocation(parser);
   fputts(TSTR("/>\n"), fp);
@@ -449,9 +459,10 @@ metaEndCdataSection(void *userData)
 static void XMLCALL
 metaCharacterData(void *userData, const XML_Char *s, int len)
 {
-  T_FN_START;
   XML_Parser parser = (XML_Parser) userData;
   FILE *fp = (FILE *)XML_GetUserData(parser);
+  T_FN_START;
+
   fputts(TSTR("<chars str=\""), fp);
   characterData(fp, s, len);
   puttc(TCH('"'), fp);
@@ -467,9 +478,10 @@ metaStartDoctypeDecl(void *userData,
                      const XML_Char *UNUSED_P(pubid),
                      int UNUSED_P(has_internal_subset))
 {
-  T_FN_START;
   XML_Parser parser = (XML_Parser) userData;
   FILE *fp = (FILE *)XML_GetUserData(parser);
+  T_FN_START;
+
   ftprintf(fp, TSTR("<startdoctype name=\"%s\""), doctypeName);
   metaLocation(parser);
   fputts(TSTR("/>\n"), fp);
@@ -479,9 +491,10 @@ metaStartDoctypeDecl(void *userData,
 static void XMLCALL
 metaEndDoctypeDecl(void *userData)
 {
-  T_FN_START;
   XML_Parser parser = (XML_Parser) userData;
   FILE *fp = (FILE *)XML_GetUserData(parser);
+  T_FN_START;
+
   fputts(TSTR("<enddoctype"), fp);
   metaLocation(parser);
   fputts(TSTR("/>\n"), fp);
@@ -495,9 +508,10 @@ metaNotationDecl(void *userData,
                  const XML_Char *systemId,
                  const XML_Char *publicId)
 {
-  T_FN_START;
   XML_Parser parser = (XML_Parser) userData;
   FILE *fp = (FILE *)XML_GetUserData(parser);
+  T_FN_START;
+
   ftprintf(fp, TSTR("<notation name=\"%s\""), notationName);
   if (publicId)
     ftprintf(fp, TSTR(" public=\"%s\""), publicId);
@@ -523,9 +537,9 @@ metaEntityDecl(void *userData,
                const XML_Char *publicId,
                const XML_Char *notationName)
 {
-  T_FN_START;
   XML_Parser parser = (XML_Parser) userData;
   FILE *fp = (FILE *)XML_GetUserData(parser);
+  T_FN_START;
 
   if (value) {
     ftprintf(fp, TSTR("<entity name=\"%s\""), entityName);
@@ -563,9 +577,10 @@ metaStartNamespaceDecl(void *userData,
                        const XML_Char *prefix,
                        const XML_Char *uri)
 {
-  T_FN_START;
   XML_Parser parser = (XML_Parser) userData;
   FILE *fp = (FILE *)XML_GetUserData(parser);
+  T_FN_START;
+
   fputts(TSTR("<startns"), fp);
   if (prefix)
     ftprintf(fp, TSTR(" prefix=\"%s\""), prefix);
@@ -582,9 +597,10 @@ metaStartNamespaceDecl(void *userData,
 static void XMLCALL
 metaEndNamespaceDecl(void *userData, const XML_Char *prefix)
 {
-  T_FN_START;
   XML_Parser parser = (XML_Parser) userData;
   FILE *fp = (FILE *)XML_GetUserData(parser);
+  T_FN_START;
+
   if (!prefix)
     fputts(TSTR("<endns/>\n"), fp);
   else
@@ -754,10 +770,11 @@ notStandalone(void *UNUSED_P(userData))
 static void
 showVersion(XChar *prog)
 {
-  T_FN_START;
   XChar *s = prog;
   XChar ch;
   const XML_Feature *features = XML_GetFeatureList();
+  T_FN_START;
+
   while ((ch = *s) != 0) {
       if (ch == XCH('/')
 #if defined(_WIN32)
@@ -796,7 +813,6 @@ usage(const XChar *prog, int rc)
 int
 xmain(int argc, XChar **argv)
 {
-  T_FN_START;
   int i, j;
   const XChar *outputDir = NULL;
   const XML_Char *encoding = NULL;
@@ -808,6 +824,7 @@ xmain(int argc, XChar **argv)
   enum XML_ParamEntityParsing paramEntityParsing = 
     XML_PARAM_ENTITY_PARSING_NEVER;
   int useStdin = 0;
+  T_FN_START;
 
 #ifdef _MSC_VER
   _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF|_CRTDBG_LEAK_CHECK_DF);

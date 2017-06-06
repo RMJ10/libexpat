@@ -24,11 +24,11 @@ filemap(const XML_Char *name,
         void (*processor)(const void *, size_t, const XML_Char *, void *arg),
         void *arg)
 {
-  T_FN_START;
   int fd;
   size_t nbytes;
   struct stat sb;
   void *p;
+  T_FN_START;
 
   fd = topen(name, O_RDONLY);
   if (fd < 0) {
