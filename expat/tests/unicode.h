@@ -15,6 +15,11 @@
 extern "C" {
 #endif
 
+typedef struct tstring_s {
+    struct tstring_s *next;
+    void *str;
+} TString;
+
 #ifdef XML_UNICODE
 #ifdef XML_UNICODE_WCHAR_T
 
@@ -40,11 +45,6 @@ extern "C" {
  * overhead too.
  */
 
-typedef struct tstring_s {
-    struct tstring_s *next;
-    void *str;
-} TString;
-
 /* Dangerous macro, but all the usual ways of making it safe won't work */
 #define TSTR_FN_START TString *_tstring_list_head = NULL
 #define TSTR_FN_END tstring_dispose(_tstring_list_head)
@@ -54,11 +54,6 @@ typedef struct tstring_s {
 #define TSTR2CHAR(x) tstring_create_utf8(&_tstring_list_head, (x))
 
 #define TSTR_CMP(s, t) tstring_cmp((s), (t))
-
-extern const XML_Char *tstring_create_utf16(TString **phead, const char *s);
-extern const char *tstring_create_utf8(TString **phead, const XML_Char *s);
-extern void tstring_dispose(TString *head);
-extern int tstring_cmp(const XML_Char *s1, const XML_Char *s2);
 
 #endif /* !XML_UNICODE_WCHAR_T */
 #else /* !XML_UNICODE */
@@ -73,6 +68,11 @@ extern int tstring_cmp(const XML_Char *s1, const XML_Char *s2);
 #define TSTR_CMP(s, t) strcmp((s), (t))
 
 #endif /* !XML_UNICODE */
+
+extern const XML_Char *tstring_create_utf16(TString **phead, const char *s);
+extern const char *tstring_create_utf8(TString **phead, const XML_Char *s);
+extern void tstring_dispose(TString *head);
+extern int tstring_cmp(const XML_Char *s1, const XML_Char *s2);
 
 #ifdef __cplusplus
 }

@@ -60,9 +60,9 @@ ElementData_AddData(ElementData *storage, const XML_Char *name,
 int ElementData_CheckData(ElementData *storage,
                           const ElementResults *expected)
 {
-    TSTR_FN_START;
     int i;
     char buffer[512];
+    TSTR_FN_START;
 
     if (storage->count != expected->count) {
         sprintf(buffer, "wrong number of element entries: got %d, expected %d",

@@ -5,14 +5,15 @@
  * unicode.c: support for UTF-16 unicode handling without wchar_t
  */
 
-#if defined (XML_UNICODE) && !defined(XML_UNICODE_WCHAR_T)
-
 #include <stdlib.h>
 #include <string.h>
 #include "expat.h"
 #include "minicheck.h"
 #include "unicode.h"
+#include "internal.h" /* for UNUSED_P */
 
+
+#if defined (XML_UNICODE) && !defined(XML_UNICODE_WCHAR_T)
 const XML_Char *
 tstring_create_utf16(TString **phead, const char *s)
 {
@@ -32,7 +33,6 @@ tstring_create_utf16(TString **phead, const char *s)
         fail("Unable to create string constant");
     }
     new->str = d;
-
 
     /* Covert UTF-8 to UTF-16 */
     while (*s) {
@@ -102,7 +102,15 @@ tstring_create_utf16(TString **phead, const char *s)
     *phead = new;
     return (const XML_Char *)new->str;
 }
+#else /* defined (XML_UNICODE) && !defined(XML_UNICODE_WCHAR_T) */
+const XML_Char *
+tstring_create_utf16(TString **UNUSED_P(phead), const char *UNUSED_P(s))
+{
+    return NULL;
+}
+#endif /* defined (XML_UNICODE) && !defined(XML_UNICODE_WCHAR_T) */
 
+#if defined (XML_UNICODE) && !defined(XML_UNICODE_WCHAR_T)
 static unsigned long
 utf16_to_codepoint(const XML_Char **ps)
 {
@@ -188,7 +196,15 @@ tstring_create_utf8(TString **phead, const XML_Char *s)
     *phead = new;
     return (const char *)new->str;
 }
+#else /* defined (XML_UNICODE) && !defined(XML_UNICODE_WCHAR_T) */
+const char *
+tstring_create_utf8(TString **UNUSED_P(phead), const XML_Char *UNUSED_P(s))
+{
+    return NULL;
+}
+#endif /* defined (XML_UNICODE) && !defined(XML_UNICODE_WCHAR_T) */
 
+#if defined (XML_UNICODE) && !defined(XML_UNICODE_WCHAR_T)
 void
 tstring_dispose(TString *head)
 {
@@ -199,7 +215,14 @@ tstring_dispose(TString *head)
         head = next;
     }
 }
+#else /* defined (XML_UNICODE) && !defined(XML_UNICODE_WCHAR_T) */
+void
+tstring_dispose(TString *UNUSED_P(head))
+{
+}
+#endif /* defined (XML_UNICODE) && !defined(XML_UNICODE_WCHAR_T) */
 
+#if defined (XML_UNICODE) && !defined(XML_UNICODE_WCHAR_T)
 int
 tstring_cmp(const XML_Char *s1, const XML_Char *s2)
 {
@@ -215,5 +238,10 @@ tstring_cmp(const XML_Char *s1, const XML_Char *s2)
         return 1;
     return 0;
 }
-
+#else /* defined (XML_UNICODE) && !defined(XML_UNICODE_WCHAR_T) */
+int
+tstring_cmp(const XML_Char *UNUSED_P(s1), const XML_Char *UNUSED_P(s2))
+{
+    return -1;
+}
 #endif /* defined (XML_UNICODE) && !defined(XML_UNICODE_WCHAR_T) */

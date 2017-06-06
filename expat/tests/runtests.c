@@ -322,10 +322,10 @@ _run_attribute_check(const char *text, const XML_Char *expected,
 /* Regression test for SF bug #491986. */
 START_TEST(test_danish_latin1)
 {
-    TSTR_FN_START;
     const char *text =
         "<?xml version='1.0' encoding='iso-8859-1'?>\n"
         "<e>J\xF8rgen \xE6\xF8\xE5\xC6\xD8\xC5</e>";
+    TSTR_FN_START;
     run_character_check(text,
                         TSTR("J\xC3\xB8rgen \xC3\xA6\xC3\xB8\xC3\xA5"
                              "\xC3\x86\xC3\x98\xC3\x85"));
@@ -337,10 +337,10 @@ END_TEST
 /* Regression test for SF bug #514281. */
 START_TEST(test_french_charref_hexidecimal)
 {
-    TSTR_FN_START;
     const char *text =
         "<?xml version='1.0' encoding='iso-8859-1'?>\n"
         "<doc>&#xE9;&#xE8;&#xE0;&#xE7;&#xEA;&#xC8;</doc>";
+    TSTR_FN_START;
     run_character_check(text,
                         TSTR("\xC3\xA9\xC3\xA8\xC3\xA0\xC3\xA7\xC3\xAA"
                              "\xC3\x88"));
@@ -350,10 +350,10 @@ END_TEST
 
 START_TEST(test_french_charref_decimal)
 {
-    TSTR_FN_START;
     const char *text =
         "<?xml version='1.0' encoding='iso-8859-1'?>\n"
         "<doc>&#233;&#232;&#224;&#231;&#234;&#200;</doc>";
+    TSTR_FN_START;
     run_character_check(text,
                         TSTR("\xC3\xA9\xC3\xA8\xC3\xA0\xC3\xA7\xC3\xAA"
                              "\xC3\x88"));
@@ -363,10 +363,10 @@ END_TEST
 
 START_TEST(test_french_latin1)
 {
-    TSTR_FN_START;
     const char *text =
         "<?xml version='1.0' encoding='iso-8859-1'?>\n"
         "<doc>\xE9\xE8\xE0\xE7\xEa\xC8</doc>";
+    TSTR_FN_START;
     run_character_check(text,
                         TSTR("\xC3\xA9\xC3\xA8\xC3\xA0\xC3\xA7\xC3\xAA"
                              "\xC3\x88"));
@@ -376,10 +376,10 @@ END_TEST
 
 START_TEST(test_french_utf8)
 {
-    TSTR_FN_START;
     const char *text =
         "<?xml version='1.0' encoding='utf-8'?>\n"
         "<doc>\xC3\xA9</doc>";
+    TSTR_FN_START;
     run_character_check(text, TSTR("\xC3\xA9"));
     TSTR_FN_END;
 }
@@ -392,8 +392,8 @@ END_TEST
 */
 START_TEST(test_utf8_false_rejection)
 {
-    TSTR_FN_START;
     const char *text = "<doc>\xEF\xBA\xBF</doc>";
+    TSTR_FN_START;
     run_character_check(text, TSTR("\xEF\xBA\xBF"));
     TSTR_FN_END;
 }
@@ -531,15 +531,23 @@ END_TEST
 /* Regression test for SF bug #481609, #774028. */
 START_TEST(test_latin1_umlauts)
 {
-    TSTR_FN_START;
     const char *text =
         "<?xml version='1.0' encoding='iso-8859-1'?>\n"
         "<e a='\xE4 \xF6 \xFC &#228; &#246; &#252; &#x00E4; &#x0F6; &#xFC; >'\n"
         "  >\xE4 \xF6 \xFC &#228; &#246; &#252; &#x00E4; &#x0F6; &#xFC; ></e>";
-    const XML_Char *expected =
-        TSTR("\xC3\xA4 \xC3\xB6 \xC3\xBC "
-             "\xC3\xA4 \xC3\xB6 \xC3\xBC "
-             "\xC3\xA4 \xC3\xB6 \xC3\xBC >");
+    const XML_Char *expected;
+    TSTR_FN_START;
+
+    /* This is here rather than a static initializer because
+     * TSTR_FN_START is an empty macro if XML_UNICODE is not defined,
+     * which causes compiler warnings if it is not the last
+     * declaration.  Unfortunately it needs to be declared before any
+     * use of TSTR() if XML_UNICODE is defined, so the initializer has
+     * to move.
+     */
+    expected = TSTR("\xC3\xA4 \xC3\xB6 \xC3\xBC "
+                    "\xC3\xA4 \xC3\xB6 \xC3\xBC "
+                    "\xC3\xA4 \xC3\xB6 \xC3\xBC >");
     run_character_check(text, expected);
     XML_ParserReset(parser, NULL);
     run_attribute_check(text, expected);
@@ -833,8 +841,9 @@ check_attr_contains_normalized_whitespace(void *UNUSED_P(userData),
                                           const XML_Char *UNUSED_P(name),
                                           const XML_Char **atts)
 {
-    TSTR_FN_START;
     int i;
+    TSTR_FN_START;
+
     for (i = 0; atts[i] != NULL; i += 2) {
         const XML_Char *attrname = atts[i];
         const XML_Char *value = atts[i + 1];
@@ -967,11 +976,11 @@ external_entity_loader_set_encoding(XML_Parser parser,
     /* This text says it's an unsupported encoding, but it's really
        UTF-8, which we tell Expat using XML_SetEncoding().
     */
-    TSTR_FN_START;
     const char *text =
         "<?xml encoding='iso-8859-3'?>"
         "\xC3\xA9";
     XML_Parser extparser;
+    TSTR_FN_START;
 
     extparser = XML_ExternalEntityParserCreate(parser, context, NULL);
     if (extparser == NULL)
@@ -990,12 +999,12 @@ external_entity_loader_set_encoding(XML_Parser parser,
 
 START_TEST(test_ext_entity_set_encoding)
 {
-    TSTR_FN_START;
     const char *text =
         "<!DOCTYPE doc [\n"
         "  <!ENTITY en SYSTEM 'http://xml.libexpat.org/dummy.ent'>\n"
         "]>\n"
         "<doc>&en;</doc>";
+    TSTR_FN_START;
 
     XML_SetExternalEntityRefHandler(parser,
                                     external_entity_loader_set_encoding);
@@ -1169,7 +1178,6 @@ END_TEST
 /* Regression test for SF bug #483514. */
 START_TEST(test_dtd_default_handling)
 {
-    TSTR_FN_START;
     const char *text =
         "<!DOCTYPE doc [\n"
         "<!ENTITY e SYSTEM 'http://xml.libexpat.org/e'>\n"
@@ -1179,6 +1187,7 @@ START_TEST(test_dtd_default_handling)
         "<?pi in dtd?>\n"
         "<!--comment in dtd-->\n"
         "]><doc/>";
+    TSTR_FN_START;
 
     XML_SetDefaultHandler(parser, accumulate_characters);
     XML_SetStartDoctypeDeclHandler(parser, dummy_start_doctype_handler);
@@ -1375,11 +1384,12 @@ END_TEST
 
 START_TEST(test_good_cdata_ascii)
 {
-    TSTR_FN_START;
     const char *text = "<a><![CDATA[<greeting>Hello, world!</greeting>]]></a>";
-    const XML_Char *expected = TSTR("<greeting>Hello, world!</greeting>");
-
+    const XML_Char *expected;
     CharData storage;
+    TSTR_FN_START;
+
+    expected = TSTR("<greeting>Hello, world!</greeting>");
     CharData_Init(&storage);
     XML_SetUserData(parser, &storage);
     XML_SetCharacterDataHandler(parser, accumulate_characters);
@@ -1393,7 +1403,6 @@ END_TEST
 
 START_TEST(test_good_cdata_utf16)
 {
-    TSTR_FN_START;
     /* Test data is:
      *   <?xml version='1.0' encoding='utf-16'?>
      *   <a><![CDATA[hello]]></a>
@@ -1404,9 +1413,11 @@ START_TEST(test_good_cdata_utf16)
                 " \0e\0n\0c\0o\0d\0i\0n\0g\0=\0'\0u\0t\0f\0-\0""1\0""6\0'"
                 "\0?\0>\0\n"
             "\0<\0a\0>\0<\0!\0[\0C\0D\0A\0T\0A\0[\0h\0e\0l\0l\0o\0]\0]\0>\0<\0/\0a\0>";
-    const XML_Char *expected = TSTR("hello");
-
+    const XML_Char *expected;
     CharData storage;
+    TSTR_FN_START;
+
+    expected = TSTR("hello");
     CharData_Init(&storage);
     XML_SetUserData(parser, &storage);
     XML_SetCharacterDataHandler(parser, accumulate_characters);
@@ -1767,10 +1778,11 @@ END_TEST
 /* Test XML Base is set and unset appropriately */
 START_TEST(test_set_base)
 {
-    TSTR_FN_START;
     const XML_Char *old_base;
-    const XML_Char *new_base = TSTR("/local/file/name.xml");
+    const XML_Char *new_base;
+    TSTR_FN_START;
 
+    new_base = TSTR("/local/file/name.xml");
     old_base = XML_GetBase(parser);
     if (XML_SetBase(parser, new_base) != XML_STATUS_OK)
         fail("Unable to set base");
@@ -1850,7 +1862,6 @@ counting_start_element_handler(void *userData,
 
 START_TEST(test_attributes)
 {
-    TSTR_FN_START;
     const char *text =
         "<!DOCTYPE doc [\n"
         "<!ELEMENT doc (tag)>\n"
@@ -1862,6 +1873,7 @@ START_TEST(test_attributes)
     AttrInfo doc_info[4];
     AttrInfo tag_info[2];
     ElementInfo info[3];
+    TSTR_FN_START;
 
     /* Sadly these initial values cannot be put in an initializer
      * because if XML_UNICODE is defined but XML_UNICODE_WCHAR_T is
@@ -2086,9 +2098,9 @@ END_TEST
 /* Test setting an explicit encoding */
 START_TEST(test_explicit_encoding)
 {
-    TSTR_FN_START;
     const char *text1 = "<doc>Hello ";
     const char *text2 = " World</doc>";
+    TSTR_FN_START;
 
     /* First say we are UTF-8 */
     if (XML_SetEncoding(parser, TSTR("utf-8")) != XML_STATUS_OK)
@@ -2496,9 +2508,9 @@ static void XMLCALL
 triplet_start_checker(void *userData, const XML_Char *name,
                       const XML_Char **atts)
 {
-    TSTR_FN_START;
     XML_Char **elemstr = (XML_Char **)userData;
     char buffer[1024];
+    TSTR_FN_START;
     if (TSTR_CMP(elemstr[0], name) != 0) {
         sprintf(buffer, "unexpected start string: '%s'", TSTR2CHAR(name));
         TSTR_FN_END;
@@ -2521,8 +2533,8 @@ triplet_start_checker(void *userData, const XML_Char *name,
 static void XMLCALL
 triplet_end_checker(void *userData, const XML_Char *name)
 {
-    TSTR_FN_START;
     XML_Char **elemstr = (XML_Char **)userData;
+    TSTR_FN_START;
     if (TSTR_CMP(elemstr[0], name) != 0) {
         char buffer[1024];
         sprintf(buffer, "unexpected end string: '%s'", TSTR2CHAR(name));
@@ -2535,12 +2547,12 @@ triplet_end_checker(void *userData, const XML_Char *name)
 
 START_TEST(test_return_ns_triplet)
 {
-    TSTR_FN_START;
     const char *text =
         "<foo:e xmlns:foo='http://expat.sf.net/' bar:a='12'\n"
         "       xmlns:bar='http://expat.sf.net/'>";
     const char *epilog = "</foo:e>";
     const XML_Char *elemstr[2];
+    TSTR_FN_START;
 
     /* Unfortunately these cannot be done in an initializer because
      * TSTRs can be dynamically allocated rather than constants in
@@ -2802,7 +2814,6 @@ END_TEST
 /* Regression test #4 for SF bug #673791. */
 START_TEST(test_ns_prefix_with_empty_uri_4)
 {
-    TSTR_FN_START;
     const char *text =
         "<!DOCTYPE doc [\n"
         "  <!ELEMENT prefix:doc EMPTY>\n"
@@ -2814,6 +2825,7 @@ START_TEST(test_ns_prefix_with_empty_uri_4)
        the weird structuring lets us re-use the triplet_end_checker()
        function also used for another test. */
     const XML_Char *elemstr[1];
+    TSTR_FN_START;
 
     /* Unfortunately this cannot be an initializer because TSTRs can
      * be dynamically allocated instead of constants in some builds.
@@ -2932,9 +2944,9 @@ END_TEST
 /* Test memory allocation failures for a parser with an encoding */
 START_TEST(test_misc_alloc_create_parser_with_encoding)
 {
-    TSTR_FN_START;
     XML_Memory_Handling_Suite memsuite = { duff_allocator, realloc, free };
     unsigned int i;
+    TSTR_FN_START;
 
     /* Try several levels of allocation */
     for (i = 0; i < 10; i++) {
@@ -3124,13 +3136,13 @@ END_TEST
  */
 START_TEST(test_misc_attribute_leak)
 {
-    TSTR_FN_START;
     const char *text = "<D xmlns:L=\"D\" l:a='' L:a=''/>";
     XML_Memory_Handling_Suite memsuite = {
         tracking_malloc,
         tracking_realloc,
         tracking_free
     };
+    TSTR_FN_START;
 
     parser = XML_ParserCreate_MM(TSTR("UTF-8"), &memsuite, TSTR("\n"));
     expect_failure(text, XML_ERROR_UNBOUND_PREFIX,
@@ -3489,7 +3501,6 @@ END_TEST
  */
 START_TEST(test_alloc_dtd_default_handling)
 {
-    TSTR_FN_START;
     const char *text =
         "<!DOCTYPE doc [\n"
         "<!ENTITY e SYSTEM 'http://xml.libexpat.org/e'>\n"
@@ -3499,11 +3510,13 @@ START_TEST(test_alloc_dtd_default_handling)
         "<?pi in dtd?>\n"
         "<!--comment in dtd-->\n"
         "]><doc/>";
-    const XML_Char *expected = TSTR("\n\n\n\n\n\n\n<doc/>");
+    const XML_Char *expected;
     CharData storage;
     int i;
     int repeat = 0;
+    TSTR_FN_START;
 
+    expected = TSTR("\n\n\n\n\n\n\n<doc/>");
     for (i = 0; i < 10; i++) {
         /* Repeat some counts to catch cached allocations */
         if ((repeat < 4 && i == 2) ||
@@ -3552,8 +3565,8 @@ END_TEST
 /* Test robustness of XML_SetEncoding() with a failing allocator */
 START_TEST(test_alloc_explicit_encoding)
 {
-    TSTR_FN_START;
     int i;
+    TSTR_FN_START;
 
     for (i = 0; i < 5; i++) {
         allocation_count = i;
@@ -3575,10 +3588,11 @@ END_TEST
 /* Test robustness of XML_SetBase against a failing allocator */
 START_TEST(test_alloc_set_base)
 {
-    TSTR_FN_START;
-    const XML_Char *new_base = TSTR("/local/file/name.xml");
+    const XML_Char *new_base;
     int i;
+    TSTR_FN_START;
 
+    new_base = TSTR("/local/file/name.xml");
     for (i = 0; i < 5; i++) {
         allocation_count = i;
         if (XML_SetBase(parser, new_base) == XML_STATUS_OK)
