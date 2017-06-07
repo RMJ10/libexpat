@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "elements", "examples\elements.vcxproj", "{35262250-C85F-463A-9F6D-670088BFA17E}"
 EndProject
@@ -16,6 +16,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "outline", "examples\outline.vcxproj", "{DE74E6FD-E107-4326-B1B0-A0CFEEB64F25}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xmlwf", "xmlwf\xmlwf.vcxproj", "{E3C5991F-5238-4168-A179-275D1AC98D7E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xmlwfw", "xmlwf\xmlwfw.vcxproj", "{6E193073-F564-4BEB-B6EA-87ED216429C6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -66,6 +68,12 @@ Global
 		{E3C5991F-5238-4168-A179-275D1AC98D7E}.Release|Win32.Build.0 = Release|Win32
 		{E3C5991F-5238-4168-A179-275D1AC98D7E}.Template|Win32.ActiveCfg = Template|Win32
 		{E3C5991F-5238-4168-A179-275D1AC98D7E}.Template|Win32.Build.0 = Template|Win32
+		{6E193073-F564-4BEB-B6EA-87ED216429C6}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6E193073-F564-4BEB-B6EA-87ED216429C6}.Debug|Win32.Build.0 = Debug|Win32
+		{6E193073-F564-4BEB-B6EA-87ED216429C6}.Release|Win32.ActiveCfg = Release|Win32
+		{6E193073-F564-4BEB-B6EA-87ED216429C6}.Release|Win32.Build.0 = Release|Win32
+		{6E193073-F564-4BEB-B6EA-87ED216429C6}.Template|Win32.ActiveCfg = Template|Win32
+		{6E193073-F564-4BEB-B6EA-87ED216429C6}.Template|Win32.Build.0 = Template|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

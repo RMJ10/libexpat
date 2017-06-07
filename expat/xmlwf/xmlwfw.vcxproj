@@ -9,28 +9,37 @@
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Template|Win32">
+      <Configuration>Template</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <SccProjectName />
     <SccLocalPath />
-    <ProjectGuid>{63D6D820-B526-4A5F-9605-9B8551FAC591}</ProjectGuid>
+    <ProjectGuid>{6E193073-F564-4BEB-B6EA-87ED216429C6}</ProjectGuid>
     <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Template|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v141</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
-    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v141</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
-    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -42,13 +51,13 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>.\Release\</OutDir>
-    <IntDir>.\Release\</IntDir>
+    <OutDir>.\..\win32\bin\Release\</OutDir>
+    <IntDir>.\..\win32\tmp\Release-xmlwf\</IntDir>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>.\Debug\</OutDir>
-    <IntDir>.\Debug\</IntDir>
+    <OutDir>.\..\win32\bin\Debug\</OutDir>
+    <IntDir>.\..\win32\tmp\Debug-xmlwfw\</IntDir>
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -62,28 +71,30 @@
       <WarningLevel>Level3</WarningLevel>
       <AdditionalIncludeDirectories>..\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AssemblerListingLocation>.\Release\</AssemblerListingLocation>
-      <PrecompiledHeaderOutputFile>.\Release\runtests.pch</PrecompiledHeaderOutputFile>
-      <ObjectFileName>.\Release\</ObjectFileName>
-      <ProgramDataBaseFileName>.\Release\</ProgramDataBaseFileName>
+      <AssemblerListingLocation>.\..\win32\tmp\Release-xmlwf\</AssemblerListingLocation>
+      <PrecompiledHeaderOutputFile>.\..\win32\tmp\Release-xmlwf\xmlwf.pch</PrecompiledHeaderOutputFile>
+      <PrecompiledHeader />
+      <ObjectFileName>.\..\win32\tmp\Release-xmlwf\</ObjectFileName>
+      <ProgramDataBaseFileName>.\..\win32\tmp\Release-xmlwf\</ProgramDataBaseFileName>
     </ClCompile>
     <Midl>
-      <TypeLibraryName>.\Release\runtests.tlb</TypeLibraryName>
+      <TypeLibraryName>.\..\win32\bin\Release\xmlwf.tlb</TypeLibraryName>
     </Midl>
     <ResourceCompile>
-      <Culture>0x1009</Culture>
+      <Culture>0x0409</Culture>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <OutputFile>.\Release\runtests.bsc</OutputFile>
+      <OutputFile>.\..\win32\bin\Release\xmlwf.bsc</OutputFile>
     </Bscmake>
     <Link>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <SubSystem>Console</SubSystem>
-      <OutputFile>.\Release\runtests.exe</OutputFile>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <OutputFile>..\win32\bin\Release\xmlwf.exe</OutputFile>
       <AdditionalLibraryDirectories>..\win32\bin\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libexpatMT.lib;libexpat.exp;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libexpat.lib;setargv.obj;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -94,44 +105,58 @@
       <Optimization>Disabled</Optimization>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <WarningLevel>Level3</WarningLevel>
-      <MinimalRebuild>true</MinimalRebuild>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <AdditionalIncludeDirectories>..\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_DEBUG;WIN32;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AssemblerListingLocation>.\Debug\</AssemblerListingLocation>
-      <PrecompiledHeaderOutputFile>.\Debug\runtests.pch</PrecompiledHeaderOutputFile>
-      <ObjectFileName>.\Debug\</ObjectFileName>
-      <ProgramDataBaseFileName>.\Debug\</ProgramDataBaseFileName>
-      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <PreprocessorDefinitions>_DEBUG;WIN32;_CONSOLE;XML_UNICODE_WCHAR_T;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>.\..\win32\tmp\Debug-xmlwfw\</AssemblerListingLocation>
+      <PrecompiledHeaderOutputFile>.\..\win32\tmp\Debug-xmlwfw\xmlwfw.pch</PrecompiledHeaderOutputFile>
+      <ObjectFileName>.\..\win32\tmp\Debug-xmlwfw\</ObjectFileName>
+      <ProgramDataBaseFileName>.\..\win32\tmp\Debug-xmlwfw\</ProgramDataBaseFileName>
     </ClCompile>
     <Midl>
-      <TypeLibraryName>.\Debug\runtests.tlb</TypeLibraryName>
+      <TypeLibraryName>.\..\win32\bin\Debug\xmlwf.tlb</TypeLibraryName>
     </Midl>
     <ResourceCompile>
-      <Culture>0x1009</Culture>
+      <Culture>0x0409</Culture>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <OutputFile>.\Debug\runtests.bsc</OutputFile>
+      <OutputFile>.\..\win32\bin\Debug\xmlwf.bsc</OutputFile>
     </Bscmake>
     <Link>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
-      <OutputFile>.\Debug\runtests.exe</OutputFile>
+      <OutputFile>..\win32\bin\Debug\xmlwfw.exe</OutputFile>
       <AdditionalLibraryDirectories>..\win32\bin\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libexpatMT.lib;libexpat.exp;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libexpatw.lib;setargv.obj;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="chardata.c" />
-    <ClCompile Include="minicheck.c" />
-    <ClCompile Include="runtests.c" />
+    <ClCompile Include="codepage.c" />
+    <ClCompile Include="readfilemap.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="unixfilemap.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="win32filemap.c" />
+    <ClCompile Include="xmlfile.c" />
+    <ClCompile Include="xmlwf.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="chardata.h" />
-    <ClInclude Include="minicheck.h" />
+    <ClInclude Include="codepage.h" />
+    <ClInclude Include="xmlfile.h" />
+    <ClInclude Include="xmltchar.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\lib\expat.vcxproj">
+      <Project>{45a5074d-66e8-44a4-a03f-018027b528d6}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

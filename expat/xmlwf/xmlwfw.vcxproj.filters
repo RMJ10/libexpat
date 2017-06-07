@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="codepage.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="readfilemap.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="win32filemap.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xmlfile.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xmlwf.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="unixfilemap.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="codepage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="xmlfile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="xmltchar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{13da1414-bdbd-42f8-bdc5-53929f5aafc1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{73ab20dd-686d-4662-bd26-85181c0f0bc7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
