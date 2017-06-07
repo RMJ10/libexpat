@@ -10,12 +10,21 @@
     <ClCompile Include="runtests.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="elementdata.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="chardata.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="minicheck.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="elementdata.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="xmlchar.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

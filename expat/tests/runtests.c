@@ -25,6 +25,7 @@
 #include "internal.h"  /* for UNUSED_P only */
 #include "minicheck.h"
 #include "ascii.h" /* for ASCII_xxx */
+#include "xmlchar.h"
 
 #if defined(__amigaos__) && defined(__USE_INLINE__)
 #include <proto/expat.h>
@@ -34,28 +35,6 @@
 #define XML_FMT_INT_MOD "ll"
 #else
 #define XML_FMT_INT_MOD "l"
-#endif
-
-#ifdef XML_UNICODE_WCHAR_T
-#include <wchar.h>
-#define XML_FMT_CHAR "lc"
-#define XML_FMT_STR "ls"
-#define XML_CHAR_strlen(s) wcslen(s)
-#define XML_CHAR_strcmp(s, t) wcscmp((s), (t))
-#define XML_CHAR_strncmp(s, t, n) wcsncmp((s), (t), (n))
-#define XML_CHAR_CONST(s) _XML_CHAR_CONST(s)
-#define _XML_CHAR_CONST(s) L ## s
-#else
-#ifdef XML_UNICODE
-#error "No support for UTF-16 without wchar_t in tests"
-#else
-#define XML_FMT_CHAR "c"
-#define XML_FMT_STR "s"
-#define XML_CHAR_strlen(s) strlen(s)
-#define XML_CHAR_strcmp(s, t) strcmp((s), (t))
-#define XML_CHAR_strncmp(s, t, n) strncmp((s), (t), (n))
-#define XML_CHAR_CONST(s) s
-#endif
 #endif
 
 static XML_Parser parser;
@@ -7484,7 +7463,7 @@ START_TEST(test_alloc_nested_groups)
         fail("Parse succeeded despite failing reallocator");
     if (i == MAX_ALLOC_COUNT)
         fail("Parse failed at maximum reallocation count");
-    CharData_CheckString(&storage, "doce");
+    CharData_CheckXMLChars(&storage, XML_CHAR_CONST("doce"));
     if (dummy_handler_flags != DUMMY_ELEMENT_DECL_HANDLER_FLAG)
         fail("Element handler not fired");
 }
@@ -7524,7 +7503,7 @@ START_TEST(test_alloc_realloc_nested_groups)
         fail("Parse succeeded despite failing reallocator");
     if (i == MAX_REALLOC_COUNT)
         fail("Parse failed at maximum reallocation count");
-    CharData_CheckString(&storage, "doce");
+    CharData_CheckXMLChars(&storage, XML_CHAR_CONST("doce"));
     if (dummy_handler_flags != DUMMY_ELEMENT_DECL_HANDLER_FLAG)
         fail("Element handler not fired");
 }
