@@ -850,16 +850,16 @@ START_TEST(test_line_and_column_numbers_inside_handlers)
     ElementResults expected = {
         10,
         {
-            { "a", 1, 0, 0 },
-            { "b", 2, 2, 0 },
-            { "c", 3, 4, 0 },
-            { "c", 3, 8, 1 },
-            { "b", 4, 2, 1 },
-            { "d", 5, 2, 0 },
-            { "f", 6, 4, 0 },
-            { "f", 6, 8, 1 },
-            { "d", 7, 2, 1 },
-            { "a", 8, 0, 1 }
+            { XML_CHAR_CONST("a"), 1, 0, 0 },
+            { XML_CHAR_CONST("b"), 2, 2, 0 },
+            { XML_CHAR_CONST("c"), 3, 4, 0 },
+            { XML_CHAR_CONST("c"), 3, 8, 1 },
+            { XML_CHAR_CONST("b"), 4, 2, 1 },
+            { XML_CHAR_CONST("d"), 5, 2, 0 },
+            { XML_CHAR_CONST("f"), 6, 4, 0 },
+            { XML_CHAR_CONST("f"), 6, 8, 1 },
+            { XML_CHAR_CONST("d"), 7, 2, 1 },
+            { XML_CHAR_CONST("a"), 8, 0, 1 }
         }
     };
     ElementData storage;
@@ -1013,11 +1013,11 @@ START_TEST(test_end_element_events)
     ElementResults expected = {
         5,
         {
-            { "c", 0, 0, 1 },
-            { "b", 0, 0, 1 },
-            { "f", 0, 0, 1 },
-            { "d", 0, 0, 1 },
-            { "a", 0, 0, 1 }
+            { XML_CHAR_CONST("c"), 0, 0, 1 },
+            { XML_CHAR_CONST("b"), 0, 0, 1 },
+            { XML_CHAR_CONST("f"), 0, 0, 1 },
+            { XML_CHAR_CONST("d"), 0, 0, 1 },
+            { XML_CHAR_CONST("a"), 0, 0, 1 }
         }
     };
     ElementData storage;
@@ -2354,127 +2354,127 @@ START_TEST(test_default_current)
     ElementResults expected1 = {
         12,
         {
-            { "", DEFAULT, 0, 0 },
-            { "", CDATA,   0, 0 },
-            { "", DEFAULT, 0, 0 },
-            { "", CDATA,   0, 0 },
-            { "", DEFAULT, 0, 0 },
-            { "", CDATA,   0, 0 },
-            { "", DEFAULT, 0, 0 },
-            { "", CDATA,   0, 0 },
-            { "", DEFAULT, 0, 0 },
-            { "", CDATA,   0, 0 },
-            { "", DEFAULT, 0, 0 },
-            { "", DEFAULT, 0, 0 }
+            { XML_CHAR_CONST(""), DEFAULT, 0, 0 },
+            { XML_CHAR_CONST(""), CDATA,   0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT, 0, 0 },
+            { XML_CHAR_CONST(""), CDATA,   0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT, 0, 0 },
+            { XML_CHAR_CONST(""), CDATA,   0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT, 0, 0 },
+            { XML_CHAR_CONST(""), CDATA,   0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT, 0, 0 },
+            { XML_CHAR_CONST(""), CDATA,   0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT, 0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT, 0, 0 }
         }
     };
     ElementResults expected2 = {
         7,
         {
-            { "", DEFAULT,     0, 0 },
-            { "", CDATA_NODEF, 0, 0 },
-            { "", CDATA_NODEF, 0, 0 },
-            { "", CDATA_NODEF, 0, 0 },
-            { "", CDATA_NODEF, 0, 0 },
-            { "", CDATA_NODEF, 0, 0 },
-            { "", DEFAULT,     0, 0 }
+            { XML_CHAR_CONST(""), DEFAULT,     0, 0 },
+            { XML_CHAR_CONST(""), CDATA_NODEF, 0, 0 },
+            { XML_CHAR_CONST(""), CDATA_NODEF, 0, 0 },
+            { XML_CHAR_CONST(""), CDATA_NODEF, 0, 0 },
+            { XML_CHAR_CONST(""), CDATA_NODEF, 0, 0 },
+            { XML_CHAR_CONST(""), CDATA_NODEF, 0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT,     0, 0 }
         }
     };
     ElementResults expected3 = {
         19,
         {
-            { "", DEFAULT, 0, 0 },
-            { "", DEFAULT, 0, 0 },
-            { "", DEFAULT, 0, 0 },
-            { "", DEFAULT, 0, 0 },
-            { "", DEFAULT, 0, 0 },
-            { "", DEFAULT, 0, 0 },
-            { "", DEFAULT, 0, 0 },
-            { "", DEFAULT, 0, 0 },
-            { "", DEFAULT, 0, 0 },
-            { "", DEFAULT, 0, 0 },
-            { "", DEFAULT, 0, 0 },
-            { "", DEFAULT, 0, 0 },
-            { "", DEFAULT, 0, 0 },
-            { "", DEFAULT, 0, 0 },
-            { "", DEFAULT, 0, 0 },
-            { "", DEFAULT, 0, 0 },
-            { "", DEFAULT, 0, 0 },
-            { "", DEFAULT, 0, 0 },
-            { "", DEFAULT, 0, 0 }
+            { XML_CHAR_CONST(""), DEFAULT, 0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT, 0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT, 0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT, 0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT, 0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT, 0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT, 0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT, 0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT, 0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT, 0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT, 0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT, 0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT, 0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT, 0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT, 0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT, 0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT, 0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT, 0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT, 0, 0 }
         }
     };
     ElementResults expected4 = {
         19,
         {
-            { "", DEFAULT,    0, 0 },
-            { "", DEFAULT,    0, 0 },
-            { "", DEFAULT,    0, 0 },
-            { "", DEFAULT,    0, 0 },
-            { "", DEFAULT,    0, 0 },
-            { "", DEFAULT,    0, 0 },
-            { "", DEFAULT,    0, 0 },
-            { "", DEFAULT,    0, 0 },
-            { "", DEFAULT,    0, 0 },
-            { "", DEFAULT,    0, 0 },
-            { "", DEFAULT,    0, 0 },
-            { "", DEFAULT,    0, 0 },
-            { "", DEFAULT,    0, 0 },
-            { "", DEFAULT,    0, 0 },
-            { "", DEFAULT,    0, 0 },
-            { "", DEFAULT,    0, 0 },
-            { "", DEFAULT,    0, 0 },
-            { "", GEN_ENTITY, 0, 0 },
-            { "", DEFAULT,    0, 0 }
+            { XML_CHAR_CONST(""), DEFAULT,    0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT,    0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT,    0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT,    0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT,    0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT,    0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT,    0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT,    0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT,    0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT,    0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT,    0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT,    0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT,    0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT,    0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT,    0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT,    0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT,    0, 0 },
+            { XML_CHAR_CONST(""), GEN_ENTITY, 0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT,    0, 0 }
         }
     };
     ElementResults expected5 = {
         20,
         {
-            { "", DEFAULT, 0, 0 },
-            { "", DEFAULT, 0, 0 },
-            { "", DEFAULT, 0, 0 },
-            { "", DEFAULT, 0, 0 },
-            { "", DEFAULT, 0, 0 },
-            { "", DEFAULT, 0, 0 },
-            { "", DEFAULT, 0, 0 },
-            { "", DEFAULT, 0, 0 },
-            { "", DEFAULT, 0, 0 },
-            { "", DEFAULT, 0, 0 },
-            { "", DEFAULT, 0, 0 },
-            { "", DEFAULT, 0, 0 },
-            { "", DEFAULT, 0, 0 },
-            { "", DEFAULT, 0, 0 },
-            { "", DEFAULT, 0, 0 },
-            { "", DEFAULT, 0, 0 },
-            { "", DEFAULT, 0, 0 },
-            { "", CDATA,   0, 0 },
-            { "", DEFAULT, 0, 0 },
-            { "", DEFAULT, 0, 0 }
+            { XML_CHAR_CONST(""), DEFAULT, 0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT, 0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT, 0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT, 0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT, 0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT, 0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT, 0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT, 0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT, 0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT, 0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT, 0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT, 0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT, 0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT, 0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT, 0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT, 0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT, 0, 0 },
+            { XML_CHAR_CONST(""), CDATA,   0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT, 0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT, 0, 0 }
         }
     };
     ElementResults expected6 = {
         19,
         {
-            { "", DEFAULT,     0, 0 },
-            { "", DEFAULT,     0, 0 },
-            { "", DEFAULT,     0, 0 },
-            { "", DEFAULT,     0, 0 },
-            { "", DEFAULT,     0, 0 },
-            { "", DEFAULT,     0, 0 },
-            { "", DEFAULT,     0, 0 },
-            { "", DEFAULT,     0, 0 },
-            { "", DEFAULT,     0, 0 },
-            { "", DEFAULT,     0, 0 },
-            { "", DEFAULT,     0, 0 },
-            { "", DEFAULT,     0, 0 },
-            { "", DEFAULT,     0, 0 },
-            { "", DEFAULT,     0, 0 },
-            { "", DEFAULT,     0, 0 },
-            { "", DEFAULT,     0, 0 },
-            { "", DEFAULT,     0, 0 },
-            { "", CDATA_NODEF, 0, 0 },
-            { "", DEFAULT,     0, 0 }
+            { XML_CHAR_CONST(""), DEFAULT,     0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT,     0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT,     0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT,     0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT,     0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT,     0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT,     0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT,     0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT,     0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT,     0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT,     0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT,     0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT,     0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT,     0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT,     0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT,     0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT,     0, 0 },
+            { XML_CHAR_CONST(""), CDATA_NODEF, 0, 0 },
+            { XML_CHAR_CONST(""), DEFAULT,     0, 0 }
         }
     };
 
@@ -5258,14 +5258,14 @@ START_TEST(test_ns_tagname_overwrite)
     ElementResults result = {
         8,
         {
-            { "http://example.org/ e",     START,     0, 0 },
-            { "http://example.org/ f",     START,     0, 0 },
-            { "http://example.org/ attr",  ATTRIBUTE, 0, 0 },
-            { "http://example.org/ f",     END,       0, 0 },
-            { "http://example.org/ g",     START,     0, 0 },
-            { "http://example.org/ attr2", ATTRIBUTE, 0, 0 },
-            { "http://example.org/ g",     END,       0, 0 },
-            { "http://example.org/ e",     END,       0, 0 }
+            { XML_CHAR_CONST("http://example.org/ e"),     START,     0, 0 },
+            { XML_CHAR_CONST("http://example.org/ f"),     START,     0, 0 },
+            { XML_CHAR_CONST("http://example.org/ attr"),  ATTRIBUTE, 0, 0 },
+            { XML_CHAR_CONST("http://example.org/ f"),     END,       0, 0 },
+            { XML_CHAR_CONST("http://example.org/ g"),     START,     0, 0 },
+            { XML_CHAR_CONST("http://example.org/ attr2"), ATTRIBUTE, 0, 0 },
+            { XML_CHAR_CONST("http://example.org/ g"),     END,       0, 0 },
+            { XML_CHAR_CONST("http://example.org/ e"),     END,       0, 0 }
         }
     };
     run_ns_tagname_overwrite_test(text, &result);
@@ -5283,14 +5283,14 @@ START_TEST(test_ns_tagname_overwrite_triplet)
     ElementResults result = {
         8,
         {
-            { "http://example.org/ e n",     START,     0, 0 },
-            { "http://example.org/ f n",     START,     0, 0 },
-            { "http://example.org/ attr n",  ATTRIBUTE, 0, 0 },
-            { "http://example.org/ f n",     END,       0, 0 },
-            { "http://example.org/ g n",     START,     0, 0 },
-            { "http://example.org/ attr2 n", ATTRIBUTE, 0, 0 },
-            { "http://example.org/ g n",     END,       0, 0 },
-            { "http://example.org/ e n",     END,       0, 0 }
+            { XML_CHAR_CONST("http://example.org/ e n"),     START,     0, 0 },
+            { XML_CHAR_CONST("http://example.org/ f n"),     START,     0, 0 },
+            { XML_CHAR_CONST("http://example.org/ attr n"),  ATTRIBUTE, 0, 0 },
+            { XML_CHAR_CONST("http://example.org/ f n"),     END,       0, 0 },
+            { XML_CHAR_CONST("http://example.org/ g n"),     START,     0, 0 },
+            { XML_CHAR_CONST("http://example.org/ attr2 n"), ATTRIBUTE, 0, 0 },
+            { XML_CHAR_CONST("http://example.org/ g n"),     END,       0, 0 },
+            { XML_CHAR_CONST("http://example.org/ e n"),     END,       0, 0 }
         }
     };
     XML_SetReturnNSTriplet(parser, XML_TRUE);

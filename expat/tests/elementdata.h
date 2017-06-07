@@ -30,7 +30,7 @@ typedef struct {
 } ElementData;
 
 typedef struct {
-    char name[MAX_ELEMENT_NAME_LEN];
+    XML_Char name[MAX_ELEMENT_NAME_LEN];
     int line;
     int column;
     int is_end;
