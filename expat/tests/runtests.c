@@ -2300,12 +2300,18 @@ START_TEST(test_memory_allocation)
 }
 END_TEST
 
+#define DEFAULT      1
+#define CDATA        2
+#define CDATA_NODEF  3
+#define PARAM_ENTITY 4
+#define GEN_ENTITY   5
+
 static void XMLCALL
 record_default_handler(void *userData,
                        const XML_Char *UNUSED_P(s),
                        int UNUSED_P(len))
 {
-    CharData_AppendString((CharData *)userData, "D");
+    ElementData_AddData((ElementData *)userData, NULL, DEFAULT, 0, 0);
 }
 
 static void XMLCALL
@@ -2313,7 +2319,7 @@ record_cdata_handler(void *userData,
                      const XML_Char *UNUSED_P(s),
                      int UNUSED_P(len))
 {
-    CharData_AppendString((CharData *)userData, "C");
+    ElementData_AddData((ElementData *)userData, NULL, CDATA, 0, 0);
     XML_DefaultCurrent(parser);
 }
 
@@ -2322,7 +2328,7 @@ record_cdata_nodefault_handler(void *userData,
                      const XML_Char *UNUSED_P(s),
                      int UNUSED_P(len))
 {
-    CharData_AppendString((CharData *)userData, "c");
+    ElementData_AddData((ElementData *)userData, NULL, CDATA_NODEF, 0, 0);
 }
 
 static void XMLCALL
@@ -2330,8 +2336,9 @@ record_skip_handler(void *userData,
                     const XML_Char *UNUSED_P(entityName),
                     int is_parameter_entity)
 {
-    CharData_AppendString((CharData *)userData,
-                          is_parameter_entity ? "E" : "e");
+    ElementData_AddData((ElementData *)userData, NULL,
+                          is_parameter_entity ? PARAM_ENTITY : GEN_ENTITY,
+                          0, 0);
 }
 
 /* Test XML_DefaultCurrent() passes handling on correctly */
@@ -2343,76 +2350,209 @@ START_TEST(test_default_current)
         "<!ENTITY entity '&#37;'>\n"
         "]>\n"
         "<doc>&entity;</doc>";
-    CharData storage;
+    ElementData storage;
+    ElementResults expected1 = {
+        12,
+        {
+            { "", DEFAULT, 0, 0 },
+            { "", CDATA,   0, 0 },
+            { "", DEFAULT, 0, 0 },
+            { "", CDATA,   0, 0 },
+            { "", DEFAULT, 0, 0 },
+            { "", CDATA,   0, 0 },
+            { "", DEFAULT, 0, 0 },
+            { "", CDATA,   0, 0 },
+            { "", DEFAULT, 0, 0 },
+            { "", CDATA,   0, 0 },
+            { "", DEFAULT, 0, 0 },
+            { "", DEFAULT, 0, 0 }
+        }
+    };
+    ElementResults expected2 = {
+        7,
+        {
+            { "", DEFAULT,     0, 0 },
+            { "", CDATA_NODEF, 0, 0 },
+            { "", CDATA_NODEF, 0, 0 },
+            { "", CDATA_NODEF, 0, 0 },
+            { "", CDATA_NODEF, 0, 0 },
+            { "", CDATA_NODEF, 0, 0 },
+            { "", DEFAULT,     0, 0 }
+        }
+    };
+    ElementResults expected3 = {
+        19,
+        {
+            { "", DEFAULT, 0, 0 },
+            { "", DEFAULT, 0, 0 },
+            { "", DEFAULT, 0, 0 },
+            { "", DEFAULT, 0, 0 },
+            { "", DEFAULT, 0, 0 },
+            { "", DEFAULT, 0, 0 },
+            { "", DEFAULT, 0, 0 },
+            { "", DEFAULT, 0, 0 },
+            { "", DEFAULT, 0, 0 },
+            { "", DEFAULT, 0, 0 },
+            { "", DEFAULT, 0, 0 },
+            { "", DEFAULT, 0, 0 },
+            { "", DEFAULT, 0, 0 },
+            { "", DEFAULT, 0, 0 },
+            { "", DEFAULT, 0, 0 },
+            { "", DEFAULT, 0, 0 },
+            { "", DEFAULT, 0, 0 },
+            { "", DEFAULT, 0, 0 },
+            { "", DEFAULT, 0, 0 }
+        }
+    };
+    ElementResults expected4 = {
+        19,
+        {
+            { "", DEFAULT,    0, 0 },
+            { "", DEFAULT,    0, 0 },
+            { "", DEFAULT,    0, 0 },
+            { "", DEFAULT,    0, 0 },
+            { "", DEFAULT,    0, 0 },
+            { "", DEFAULT,    0, 0 },
+            { "", DEFAULT,    0, 0 },
+            { "", DEFAULT,    0, 0 },
+            { "", DEFAULT,    0, 0 },
+            { "", DEFAULT,    0, 0 },
+            { "", DEFAULT,    0, 0 },
+            { "", DEFAULT,    0, 0 },
+            { "", DEFAULT,    0, 0 },
+            { "", DEFAULT,    0, 0 },
+            { "", DEFAULT,    0, 0 },
+            { "", DEFAULT,    0, 0 },
+            { "", DEFAULT,    0, 0 },
+            { "", GEN_ENTITY, 0, 0 },
+            { "", DEFAULT,    0, 0 }
+        }
+    };
+    ElementResults expected5 = {
+        20,
+        {
+            { "", DEFAULT, 0, 0 },
+            { "", DEFAULT, 0, 0 },
+            { "", DEFAULT, 0, 0 },
+            { "", DEFAULT, 0, 0 },
+            { "", DEFAULT, 0, 0 },
+            { "", DEFAULT, 0, 0 },
+            { "", DEFAULT, 0, 0 },
+            { "", DEFAULT, 0, 0 },
+            { "", DEFAULT, 0, 0 },
+            { "", DEFAULT, 0, 0 },
+            { "", DEFAULT, 0, 0 },
+            { "", DEFAULT, 0, 0 },
+            { "", DEFAULT, 0, 0 },
+            { "", DEFAULT, 0, 0 },
+            { "", DEFAULT, 0, 0 },
+            { "", DEFAULT, 0, 0 },
+            { "", DEFAULT, 0, 0 },
+            { "", CDATA,   0, 0 },
+            { "", DEFAULT, 0, 0 },
+            { "", DEFAULT, 0, 0 }
+        }
+    };
+    ElementResults expected6 = {
+        19,
+        {
+            { "", DEFAULT,     0, 0 },
+            { "", DEFAULT,     0, 0 },
+            { "", DEFAULT,     0, 0 },
+            { "", DEFAULT,     0, 0 },
+            { "", DEFAULT,     0, 0 },
+            { "", DEFAULT,     0, 0 },
+            { "", DEFAULT,     0, 0 },
+            { "", DEFAULT,     0, 0 },
+            { "", DEFAULT,     0, 0 },
+            { "", DEFAULT,     0, 0 },
+            { "", DEFAULT,     0, 0 },
+            { "", DEFAULT,     0, 0 },
+            { "", DEFAULT,     0, 0 },
+            { "", DEFAULT,     0, 0 },
+            { "", DEFAULT,     0, 0 },
+            { "", DEFAULT,     0, 0 },
+            { "", DEFAULT,     0, 0 },
+            { "", CDATA_NODEF, 0, 0 },
+            { "", DEFAULT,     0, 0 }
+        }
+    };
 
     XML_SetDefaultHandler(parser, record_default_handler);
     XML_SetCharacterDataHandler(parser, record_cdata_handler);
-    CharData_Init(&storage);
+    ElementData_Init(&storage);
     XML_SetUserData(parser, &storage);
     if (_XML_Parse_SINGLE_BYTES(parser, text, strlen(text),
                                 XML_TRUE) == XML_STATUS_ERROR)
         xml_failure(parser);
-    CharData_CheckString(&storage, "DCDCDCDCDCDD");
+    ElementData_CheckData(&storage, &expected1);
 
     /* Again, without the defaulting */
     XML_ParserReset(parser, NULL);
     XML_SetDefaultHandler(parser, record_default_handler);
     XML_SetCharacterDataHandler(parser, record_cdata_nodefault_handler);
-    CharData_Init(&storage);
+    ElementData_Init(&storage);
     XML_SetUserData(parser, &storage);
     if (_XML_Parse_SINGLE_BYTES(parser, text, strlen(text),
                                 XML_TRUE) == XML_STATUS_ERROR)
         xml_failure(parser);
-    CharData_CheckString(&storage, "DcccccD");
+    ElementData_CheckData(&storage, &expected2);
 
     /* Now with an internal entity to complicate matters */
     XML_ParserReset(parser, NULL);
     XML_SetDefaultHandler(parser, record_default_handler);
     XML_SetCharacterDataHandler(parser, record_cdata_handler);
-    CharData_Init(&storage);
+    ElementData_Init(&storage);
     XML_SetUserData(parser, &storage);
     if (_XML_Parse_SINGLE_BYTES(parser, entity_text, strlen(entity_text),
                                 XML_TRUE) == XML_STATUS_ERROR)
         xml_failure(parser);
     /* The default handler suppresses the entity */
-    CharData_CheckString(&storage, "DDDDDDDDDDDDDDDDDDD");
+    ElementData_CheckData(&storage, &expected3);
 
     /* Again, with a skip handler */
     XML_ParserReset(parser, NULL);
     XML_SetDefaultHandler(parser, record_default_handler);
     XML_SetCharacterDataHandler(parser, record_cdata_handler);
     XML_SetSkippedEntityHandler(parser, record_skip_handler);
-    CharData_Init(&storage);
+    ElementData_Init(&storage);
     XML_SetUserData(parser, &storage);
     if (_XML_Parse_SINGLE_BYTES(parser, entity_text, strlen(entity_text),
                                 XML_TRUE) == XML_STATUS_ERROR)
         xml_failure(parser);
     /* The default handler suppresses the entity */
-    CharData_CheckString(&storage, "DDDDDDDDDDDDDDDDDeD");
+    ElementData_CheckData(&storage, &expected4);
 
     /* This time, allow the entity through */
     XML_ParserReset(parser, NULL);
     XML_SetDefaultHandlerExpand(parser, record_default_handler);
     XML_SetCharacterDataHandler(parser, record_cdata_handler);
-    CharData_Init(&storage);
+    ElementData_Init(&storage);
     XML_SetUserData(parser, &storage);
     if (_XML_Parse_SINGLE_BYTES(parser, entity_text, strlen(entity_text),
                                 XML_TRUE) == XML_STATUS_ERROR)
         xml_failure(parser);
-    CharData_CheckString(&storage, "DDDDDDDDDDDDDDDDDCDD");
+    ElementData_CheckData(&storage, &expected5);
 
     /* Finally, without passing the cdata to the default handler */
     XML_ParserReset(parser, NULL);
     XML_SetDefaultHandlerExpand(parser, record_default_handler);
     XML_SetCharacterDataHandler(parser, record_cdata_nodefault_handler);
-    CharData_Init(&storage);
+    ElementData_Init(&storage);
     XML_SetUserData(parser, &storage);
     if (_XML_Parse_SINGLE_BYTES(parser, entity_text, strlen(entity_text),
                                 XML_TRUE) == XML_STATUS_ERROR)
         xml_failure(parser);
-    CharData_CheckString(&storage, "DDDDDDDDDDDDDDDDDcD");
+    ElementData_CheckData(&storage, &expected6);
 }
 END_TEST
+
+/* Be tidy */
+#undef DEFAULT
+#undef CDATA
+#undef CDATA_NODEF
+#undef PARAM_ENTITY
+#undef GEN_ENTITY
 
 /* Test DTD element parsing code paths */
 START_TEST(test_dtd_elements)
