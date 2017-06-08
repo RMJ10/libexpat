@@ -1348,9 +1348,14 @@ START_TEST(test_ext_entity_set_bom)
         XML_CHAR_CONST("utf-8"),
         NULL
     };
+#ifdef XML_UNICODE
+    const XML_Char *expected = XML_CHAR_CONST("\x00e9");
+#else
+    const XML_Char *expected = XML_CHAR_CONST("\xC3\xA9");
+#endif
 
     XML_SetExternalEntityRefHandler(parser, external_entity_loader);
-    run_ext_character_check(text, &test_data, XML_CHAR_CONST("\xC3\xA9"));
+    run_ext_character_check(text, &test_data, expected);
 }
 END_TEST
 
