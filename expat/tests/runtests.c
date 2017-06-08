@@ -2101,8 +2101,8 @@ START_TEST(test_multichar_cdata_utf16)
      *   UTF-16: 0xd834 0xdd5e
      *   UTF-8:  0xf0 0x9d 0x85 0x9e
      * and {CROTCHET} is U+1d15f (a crotchet or quarter-note)
-     *   UTF-16: 0xd834 0xdd5e
-     *   UTF-8:  0xf0 0x9d 0x85 0x9e
+     *   UTF-16: 0xd834 0xdd5f
+     *   UTF-8:  0xf0 0x9d 0x85 0x9f
      */
     const char text[] =
         "\0<\0?\0x\0m\0l\0"
