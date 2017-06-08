@@ -531,9 +531,15 @@ START_TEST(test_danish_latin1)
     const char *text =
         "<?xml version='1.0' encoding='iso-8859-1'?>\n"
         "<e>J\xF8rgen \xE6\xF8\xE5\xC6\xD8\xC5</e>";
-    run_character_check(text,
-                        XML_CHAR_CONST("J\xC3\xB8rgen \xC3\xA6\xC3\xB8\xC3")
-                        XML_CHAR_CONST("\xA5\xC3\x86\xC3\x98\xC3\x85"));
+#ifdef XML_UNICODE
+    const XML_Char *expected =
+        XML_CHAR_CONST("J\x00f8rgen \x00e6\x00f8\x00e5\x00c6\x00d8\x00c5");
+#else
+    const XML_Char *expected =
+        XML_CHAR_CONST("J\xC3\xB8rgen \xC3\xA6\xC3\xB8\xC3")
+        XML_CHAR_CONST("\xA5\xC3\x86\xC3\x98\xC3\x85");
+#endif
+    run_character_check(text, expected);
 }
 END_TEST
 
