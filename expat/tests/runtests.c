@@ -601,7 +601,12 @@ START_TEST(test_french_utf8)
     const char *text =
         "<?xml version='1.0' encoding='utf-8'?>\n"
         "<doc>\xC3\xA9</doc>";
-    run_character_check(text, XML_CHAR_CONST("\xC3\xA9"));
+#ifdef XML_UNICODE
+    const XML_Char *expected = XML_CHAR_CONST("\x00e9");
+#else
+    const XML_Char *expected = XML_CHAR_CONST("\xC3\xA9");
+#endif
+    run_character_check(text, expected);
 }
 END_TEST
 
