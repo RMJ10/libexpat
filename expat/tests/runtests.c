@@ -862,7 +862,6 @@ start_element_event_handler2(void *userData, const XML_Char *name,
 			     const XML_Char **UNUSED_P(attr))
 {
     ElementData *storage = (ElementData *) userData;
-    char buffer[100];
 
     ElementData_AddData(storage, name,
         XML_GetCurrentLineNumber(parser),
